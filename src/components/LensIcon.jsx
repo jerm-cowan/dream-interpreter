@@ -1,39 +1,50 @@
-const SHARED_PROPS = {
-  viewBox: '0 0 24 24',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 1.5,
-  strokeLinecap: 'round',
-  strokeLinejoin: 'round',
-}
+import { BookOpen, User } from 'lucide-react'
 
-// Simple line-icon motifs per lens: brain (psychology), wave/moon-phase (neuroscience), compass (symbolism)
-function LensIcon({ id, className }) {
-  if (id === 'psychology') {
-    return (
-      <svg {...SHARED_PROPS} className={className} aria-hidden="true">
-        <path d="M9.5 3.5a2.7 2.7 0 0 0-2.7 2.7 2.7 2.7 0 0 0-1.8 4.5 2.7 2.7 0 0 0 .9 4.9 2.7 2.7 0 0 0 2.6 3.4 1.8 1.8 0 0 0 1.8-1.8V6.2a2.7 2.7 0 0 0-.8-2.7Z" />
-        <path d="M14.5 3.5a2.7 2.7 0 0 1 2.7 2.7 2.7 2.7 0 0 1 1.8 4.5 2.7 2.7 0 0 1-.9 4.9 2.7 2.7 0 0 1-2.6 3.4 1.8 1.8 0 0 1-1.8-1.8V6.2a2.7 2.7 0 0 1 .8-2.7Z" />
-      </svg>
-    )
-  }
+// Established icons per lens: head/person (psychology), open book (symbolism) via lucide;
+// neuroscience uses a custom hub network icon since lucide-react has no equivalent for that shape
+const OUTER_NODES = [
+  [20, 12],
+  [16, 5.1],
+  [8, 5.1],
+  [4, 12],
+  [8, 18.9],
+  [16, 18.9],
+]
 
-  if (id === 'neuroscience') {
-    return (
-      <svg {...SHARED_PROPS} className={className} aria-hidden="true">
-        <path d="M2 13c1.3-2.6 2.2-2.6 3.5 0s2.2 2.6 3.5 0 2.2-2.6 3.5 0 2.2 2.6 3.5 0 2.2-2.6 3.5 0" />
-        <path d="M16 5.5a6 6 0 1 0 0 12" />
-      </svg>
-    )
-  }
-
+function NetworkIcon({ className }) {
   return (
-    <svg {...SHARED_PROPS} className={className} aria-hidden="true">
-      <circle cx="12" cy="12" r="8.25" />
-      <path d="m9.7 14.3 1.7-4.6 4.6-1.7-1.7 4.6-4.6 1.7Z" />
-      <circle cx="12" cy="12" r="0.9" fill="currentColor" stroke="none" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      {OUTER_NODES.map(([x, y]) => (
+        <line key={`${x}-${y}`} x1="12" y1="12" x2={x} y2={y} strokeWidth="1.3" />
+      ))}
+      {OUTER_NODES.map(([x, y]) => (
+        <circle key={`node-${x}-${y}`} cx={x} cy={y} r="2.6" strokeWidth="1.8" />
+      ))}
+      <circle cx="12" cy="12" r="2.8" strokeWidth="1.8" />
     </svg>
   )
+}
+
+const LENS_ICONS = {
+  psychology: User,
+  symbolism: BookOpen,
+}
+
+function LensIcon({ id, className }) {
+  if (id === 'neuroscience') {
+    return <NetworkIcon className={className} />
+  }
+
+  const Icon = LENS_ICONS[id]
+  return <Icon className={className} aria-hidden="true" />
 }
 
 export default LensIcon

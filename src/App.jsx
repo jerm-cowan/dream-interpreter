@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EntryScreen from './components/screens/EntryScreen'
 import ConstellationScreen from './components/screens/ConstellationScreen'
 import ResultsScreen from './components/screens/ResultsScreen'
@@ -11,9 +11,26 @@ function App() {
   const [tone, setTone] = useState('reflective')
   const [selectedLenses, setSelectedLenses] = useState(ALL_LENS_IDS)
 
+  // Sync app view state with browser history so the back button (in-app or browser) works
+  useEffect(() => {
+    window.history.replaceState({ view: 'entry' }, '')
+
+    function handlePopState(event) {
+      setView(event.state?.view ?? 'entry')
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  function navigateTo(nextView) {
+    setView(nextView)
+    window.history.pushState({ view: nextView }, '')
+  }
+
   function handleDreamSubmit() {
     setSelectedLenses(ALL_LENS_IDS)
-    setView('constellation')
+    navigateTo('constellation')
   }
 
   function handleToggleLens(lensId) {
@@ -29,12 +46,12 @@ function App() {
 
   function handleReveal() {
     console.log('Reveal requested', { selectedLenses, tone })
-    setView('results')
+    navigateTo('results')
   }
 
   function handleStartOver() {
     setDreamText('')
-    setView('entry')
+    navigateTo('entry')
   }
 
   return (

@@ -1,5 +1,7 @@
+import { Brain } from 'lucide-react'
 import ToneControl from '../ToneControl'
 import LensIcon from '../LensIcon'
+import BackButton from '../BackButton'
 import { LENSES, LENS_STYLES } from '../../lensData'
 
 const LENS_POSITIONS = {
@@ -12,7 +14,8 @@ function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens,
   const hasSelection = selectedLenses.length > 0
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-12 px-6 py-12">
+    <div className="relative min-h-screen flex flex-col items-center gap-12 px-6 py-12">
+      <BackButton />
       <header className="w-full max-w-xl flex flex-col items-center gap-5">
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
           Choose your lenses
@@ -33,8 +36,8 @@ function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens,
           <line x1="50" y1="54.9" x2="69.6" y2="69.6" className="stroke-gem-opal-300" strokeWidth="0.5" />
         </svg>
 
-        <div className="w-16 h-16 flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 text-xs font-display font-medium text-gem-opal-700 text-center shadow-sm md:absolute md:top-[54.9%] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-40 md:h-40 md:text-sm">
-          Dreaming Mind
+        <div className="relative w-16 h-16 flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm md:absolute md:top-[54.9%] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-40 md:h-40">
+          <Brain className="w-9 h-9 text-gem-opal-700 md:w-20 md:h-20" strokeWidth={1.5} />
         </div>
 
         {LENSES.map((lens) => {
