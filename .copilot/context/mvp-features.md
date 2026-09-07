@@ -1,46 +1,57 @@
-# MVP Features — Dream Interpreter
+# MVP Features — Dream Reflection
 
-These are the features required for the build to satisfy the Protogen case study rubric ("core flows work end to end," matches the brief). Nothing here is optional for v1.
+These are the features required for the build to satisfy the Protogen case study rubric and the vision in `BRIEF.md`. Nothing here is optional for v1.
 
-## 1. Dream input
-- Single multi-line text field.
+## 1. Entry screen
+- Single multi-line text field, minimal supporting UI — as simple as a search box.
 - Placeholder/example text to reduce blank-page friction.
-- No character minimum enforced with an error state; a soft minimum (e.g., a gentle nudge if under ~10 characters) is acceptable, but never a hard block.
 
-## 2. Tone slider (Reflective ↔ Playful) — with full theme shift
-- A single continuous-feeling slider control that snaps to a small number of discrete theme presets under the hood (see `visual-design-direction.md`).
-- Defaults to the Balanced midpoint.
-- Driving both: (a) the voice/register of generated content, and (b) a smooth, eased transition of the app's visual theme (background, accents, type) via Motion.
-- Never changes which themes/substance are identified in the generated content — only voice and visual presentation.
+## 2. Constellation screen with responsive layout
+- Central symbolic image with three lenses arranged around it.
+- **Tablet/desktop:** triangular/radial arrangement.
+- **Mobile:** gracefully collapses to a vertical stack with the center image as a small anchor icon at top — not a cramped, shrunk-down triangle.
 
-## 3. Three interpretation cards
-- **Psychology Lens:** emotions, experiences, relationships, desires, fears, subconscious themes.
-- **Neuroscience Lens:** sleep science, memory consolidation, stress processing, emotional regulation, cognition.
-- **Symbolism & Cultural Interpretation Lens:** multiple symbolic/mythological/folklore/cultural readings — never anchored to a single religion or belief system.
-- Each card visually distinct (icon, accent color, or illustration) so a user can tell them apart at a glance while scrolling.
+## 3. Tone control (Reflective ↔ Playful) — two states, real regeneration
+- A two-state toggle-style control (not a continuous multi-preset gradient).
+- Adjustable at any time, including after results are already showing.
+- Changing it triggers a **genuine new LLM generation** in the new voice — never a cosmetic-only re-theme.
+- A "reimagining..." transition covers the regeneration request, styled as part of the experience rather than a generic loading spinner.
 
-## 4. Common Themes section
-- A short synthesis identifying where the three lenses converge or echo each other.
-- Written in plain language, not just a bullet restating each card.
+## 4. Lens selection (1, 2, or 3 lenses)
+- User can select any combination of the three lenses to focus on.
+- Selection drives both the reveal animation (which connecting lines draw) and which content is shown.
 
-## 5. Reflection Questions section
-- 2–4 open-ended questions that invite the user to reflect further.
-- Must not resolve into an answer — the questions are the deliverable, not a lead-in to one.
+## 5. Animated reveal (connecting lines)
+- Motion-powered SVG line-drawing animation connecting the center image to each currently selected lens.
+- Lines stagger slightly when multiple lenses are selected — not all appearing simultaneously.
 
-## 6. Copy results
-- Single tap/click action that copies a clean, readable text version of the full result (tone setting doesn't need to be included, but all three lenses + synthesis should be).
-- Clear confirmation feedback (e.g., "Copied!") so the user knows it worked.
+## 6. Adaptive synthesis (recomputes per lens selection)
+- **3 lenses:** Common Themes, Divergent Interpretations, Reflection Questions.
+- **2 lenses:** Common Themes and Divergent Interpretations narrowed to just those two; Reflection Questions remain.
+- **1 lens:** Common Themes/Divergent Interpretations replaced by a focused single-lens reflection framing; Reflection Questions remain.
+- Recomputing synthesis for a new lens selection should be a lightweight follow-up request, not a full re-generation of all three lenses.
 
-## 7. Responsive, mobile-friendly design
-- Designed mobile-first; must remain legible and well-composed on tablet and desktop widths.
-- No horizontal scrolling, no content cut off behind fixed elements (e.g., a sticky header covering the input field on small screens).
-- Touch targets (slider handle, generate button, copy button) sized appropriately for thumbs, not just mouse pointers.
+## 7. Copy results
+- Copies the **current view's** results (whichever lenses/synthesis are currently displayed) to clipboard.
+- Clear confirmation feedback (e.g., "Copied!").
+
+## 8. Graceful rate-limit / error handling (new — required, not optional)
+- If the LLM API returns a rate-limit (429) response, the serverless function retries once or twice with short exponential backoff before giving up.
+- If still unavailable, the frontend shows a friendly, on-brand message (not a raw error, not a blank screen) and allows the user to try again.
+- This must be tested and confirmed working, not just theoretically handled — a reviewer or wider audience should never see a broken demo.
+
+## 9. Responsive, mobile-first design overall
+- No horizontal scrolling anywhere.
+- Touch targets (lens selection taps, tone control, buttons) sized appropriately for thumbs.
+- Legible and well-composed at tablet and desktop widths too.
 
 ## Definition of done for MVP
 
-A reviewer (or Jeremy, testing cold) should be able to:
+A reviewer (or Jeremy, testing cold, via the Vercel Shareable Link) should be able to:
 1. Open the deployed site on a phone with no instructions.
-2. Type a dream, optionally move the slider (and see the visual theme shift smoothly), and generate results within a couple of taps.
-3. Read three clearly distinct lenses and a synthesis section without any dead ends, broken states, or missing content.
-4. Copy the result successfully.
-5. Never encounter a login wall, saved history, chat box, or any Do-Not-Include feature from the brief.
+2. Type a dream and watch the entry → constellation transition.
+3. Select lenses (try all 3, then narrow to 2, then to 1) and see the synthesis correctly adapt each time.
+4. Adjust the tone control and see genuinely different generated content, not just a color change.
+5. Copy results successfully.
+6. Never encounter a raw error, even under rate-limiting — only graceful, on-brand messaging.
+7. Never encounter a login wall, saved history, chat box, or any Do-Not-Include feature from the brief.

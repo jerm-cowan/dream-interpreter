@@ -1,40 +1,38 @@
-# Dream Interpreter
+# Dream Reflection
 
-A mobile-first React web app that helps you explore what a memorable dream might mean — through three different lenses, side by side, instead of one single answer.
+A mobile-first React web experience that guides you through exploring what a memorable dream might mean — across three different lenses, which you can filter and slice, instead of one flat answer.
 
-> Dream Interpreter does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
+> Dream Reflection does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
 
 ## What it does
 
-1. You describe a dream in your own words.
-2. You optionally set the tone anywhere between **Reflective** and **Playful** — this doesn't just change the writing style, it shifts the entire visual theme of the app in a smooth, eased transition.
-3. You get three interpretation cards:
-   - 🧠 **Psychology Lens** — emotions, relationships, desires, fears, subconscious themes
-   - 💤 **Neuroscience Lens** — sleep science, memory consolidation, stress processing, cognition
-   - 🌙 **Symbolism & Cultural Interpretation Lens** — mythology, folklore, and cultural/spiritual perspectives (multiple traditions, no single belief system privileged)
-4. You get a synthesis: **Common Themes**, **Divergent Interpretations**, and **Reflection Questions**.
-5. You can copy the full result to keep for yourself.
+1. **Entry:** you describe a dream in your own words — as simple as a search box.
+2. **Constellation:** the app reveals a central symbolic image with three lenses arranged around it — Psychology, Neuroscience, and Symbolism & Culture — connected by animated lines.
+3. **Tone control:** a Reflective ↔ Playful toggle, adjustable any time, which triggers a genuine fresh regeneration in the new voice — not just a re-theme.
+4. **Lens filtering:** choose to focus on 1, 2, or all 3 lenses. The synthesis (Common Themes, Divergent Interpretations, Reflection Questions) recomputes around whichever lenses you've selected.
+5. **Copy** the current view's results to keep for yourself.
 
 ## Why this exists
 
-Most dream interpretation tools hand you a single confident-sounding explanation. Dream Interpreter instead lets you compare frameworks and decide what resonates — closer to a reflective journaling exercise than a fortune-telling app.
+Most dream interpretation tools hand you a single confident-sounding explanation. Dream Reflection instead lets you compare frameworks, slice them by what resonates, and adjust the tone — closer to an interactive data story about your own dream than a static fortune-telling app.
 
 ## MVP scope
 
-**In scope:** single dream input, tone slider (voice + full visual theme shift), three interpretation cards, common themes, reflection questions, copy-to-clipboard, responsive mobile-friendly design.
+**In scope:** guided multi-step journey (entry → constellation → reveal → synthesis), tone control with real regeneration, 1/2/3-lens filtering with adaptive synthesis, animated reveal/connecting-line transitions, copy-to-clipboard, graceful rate-limit handling, responsive layout (triangular on tablet/desktop, stacked on mobile).
 
-**Out of scope (by design):** user accounts, saved dream journals/history, follow-up AI chat, RAG, vector databases, long-term memory, social sharing, AI image generation. See [`BRIEF.md`](./BRIEF.md) for the full rationale.
+**Out of scope (by design):** user accounts, saved dream journals/history, follow-up AI chat, RAG, vector databases, long-term memory, social sharing, AI image generation. See [`BRIEF.md`](./BRIEF.md) for full rationale.
 
 ## Tech stack
 
-- **React** (via Vite) — chosen over Vue for its deeper animation/component ecosystem, which matters for a prompting-driven build. No router — single-screen experience.
-- **Tailwind CSS** — utility-first styling, used to define and swap between complete visual theme presets as the tone slider moves.
-- **Motion** (formerly Framer Motion) — powers the tone slider's theme-shift transition and the card "reveal" moment.
-- One serverless function that calls an LLM live, once per submission, and returns structured JSON for all three lenses + synthesis.
+- **React** (via Vite) — no router; the journey is built as in-app view state.
+- **Tailwind CSS** — styled around a gemstone color palette (Amethyst/Sapphire/Citrine for the three lenses; Obsidian/Rose Quartz for the two tone states).
+- **Motion** (formerly Framer Motion) — screen transitions, the constellation reveal, and SVG line-drawing animations.
+- **Google Gemini** (free tier, personal API key) — every generation is a live call; no canned/sample interpretations. Key lives only in a server-side Vercel environment variable.
+- One or two lightweight serverless functions: one for the initial 3-lens generation, one for recomputing synthesis when lens selection changes.
 - No database — nothing is persisted between sessions.
-- Deployed on Vercel.
+- **Deployed on Vercel**, gated by **Vercel Authentication** with a Shareable Link (no manually distributed password).
 
-> **Note on framework choice:** Protogen 200 teaches Vue. This project deliberately uses React instead — a documented decision, not an oversight — to prioritize a richer, more delightful animated experience. See `BRIEF.md` Section 8 for the full rationale.
+> **Note on framework choice:** Protogen 200 teaches Vue. This project deliberately uses React instead — a documented decision — to prioritize a richer animated experience. See `BRIEF.md` Section 8.
 
 ## Project docs
 
@@ -44,13 +42,13 @@ This repo's AI scaffolding lives in [`.copilot/context/`](./.copilot/context/) a
 |---|---|
 | [`BRIEF.md`](./BRIEF.md) | The design spec — read this first |
 | [`personas.md`](./.copilot/context/personas.md) | Who this is built for |
-| [`user-journey.md`](./.copilot/context/user-journey.md) | Step-by-step walkthrough of the experience |
-| [`mvp-features.md`](./.copilot/context/mvp-features.md) | What must ship in v1 |
+| [`user-journey.md`](./.copilot/context/user-journey.md) | The full entry → constellation → reveal → synthesis journey |
+| [`mvp-features.md`](./.copilot/context/mvp-features.md) | What must ship in v1, including lens filtering and rate-limit handling |
 | [`nice-to-haves.md`](./.copilot/context/nice-to-haves.md) | What could come later, and why it's not in v1 |
-| [`information-architecture.md`](./.copilot/context/information-architecture.md) | How the single screen is structured |
-| [`visual-design-direction.md`](./.copilot/context/visual-design-direction.md) | Tone, color, type, motion direction, and the theme-preset system |
-| [`ai-generation-approach.md`](./.copilot/context/ai-generation-approach.md) | How generation stays live and grounded without RAG/vector DBs |
-| [`development-phases.md`](./.copilot/context/development-phases.md) | How this was/should be built, phase by phase |
+| [`information-architecture.md`](./.copilot/context/information-architecture.md) | Screen/state structure of the journey |
+| [`visual-design-direction.md`](./.copilot/context/visual-design-direction.md) | Gemstone palette, triangular layout, motion direction |
+| [`ai-generation-approach.md`](./.copilot/context/ai-generation-approach.md) | Gemini setup, Knowledge Primer, lens-filtered synthesis logic, rate-limit handling |
+| [`development-phases.md`](./.copilot/context/development-phases.md) | Build plan, phase by phase |
 | [`repo-structure.md`](./.copilot/context/repo-structure.md) | Full folder structure and why |
 
 ## Getting started (once code exists)
@@ -58,8 +56,11 @@ This repo's AI scaffolding lives in [`.copilot/context/`](./.copilot/context/) a
 ```bash
 # clone and install
 git clone <your-repo-url>
-cd dream-interpreter
+cd dream-reflection
 npm install
+
+# add your own Gemini API key locally
+echo "GEMINI_API_KEY=your-key-here" > .env.local
 
 # run locally
 npm run dev

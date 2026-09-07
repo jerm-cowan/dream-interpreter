@@ -1,51 +1,61 @@
-# User Journey — Dream Interpreter
+# User Journey — Dream Reflection
 
-A single-session journey, designed to be completed in under two minutes on a phone, start to finish.
+A guided, multi-step journey built as in-app view states (no router/page reloads) — Motion's `AnimatePresence` handles every transition between steps.
 
-## Step 0: Arrival
+## Step 0: Entry screen
 
-**Screen:** Landing/entry state — just the app name, a short one-line invitation ("What did you dream last night?"), and a single open text field. Visual theme starts at the Balanced preset by default.
+**Screen:** As simple and inviting as a search box — app name, a short one-line invitation ("What did you dream last night?"), and a single open text field. Nothing else competes for attention here.
 
 **User state:** Curious, possibly still half-asleep, low patience for setup.
 
-**Design intent:** Zero friction. No login, no onboarding carousel, no explanation required before they can start typing.
+**Design intent:** Zero friction. This screen's entire job is to get the user typing immediately.
 
-## Step 1: Describe the dream
+## Step 1: Submit → transition to Constellation
 
-**Action:** User types a free-text description of the dream (a sentence or a paragraph — no minimum/maximum enforced harshly, but placeholder text should model a short, natural example).
+**Action:** User submits their dream description.
 
-**Micro-moment:** A subtle placeholder or rotating example ("I was flying over my hometown but couldn't land...") helps users who freeze up at a blank field.
+**System response:** An animated transition (the first "reveal" moment) from the entry screen into the Constellation screen — this is where the app announces its personality for the first time.
 
-## Step 2: Set the tone (optional) — the signature interaction
+## Step 2: Constellation screen
 
-**Action:** User drags a slider between **Reflective** and **Playful**. As they drag across preset thresholds, the entire visual theme of the app eases into the new preset (background tone, accent colors, type treatment) — not just a label change. Default sits at the Balanced midpoint if untouched.
+**Layout:** A central symbolic image (representing the dreaming mind) with the three lenses arranged around it — triangular/radial on tablet and desktop; on mobile, the center image shrinks to a small anchor icon at the top with the three lenses stacked below it.
 
-**Design intent:** This is the app's signature delight moment. It must feel tactile and alive — dragging the slider should visibly, smoothly transform the page's mood, reinforcing "you're choosing a lens on this experience," not just picking a writing style. See `visual-design-direction.md` for exactly what changes per preset.
+**Controls present here:**
+- **Tone control** (Reflective ↔ Playful) — visible and adjustable at all times from this point forward, not just as an initial setting.
+- **Lens selection** — the user can tap 1, 2, or all 3 lenses to include in focus.
 
-## Step 3: Generate
+**Design intent:** This screen is the emotional centerpiece of the whole app — it should feel like arriving somewhere, not like a settings panel.
 
-**Action:** User taps a single clear call-to-action ("Reveal interpretations" or similar — language should match the "slightly magical" design goal without overselling).
+## Step 3: Reveal interaction
 
-**System response:** A brief, delightful loading state (a few seconds), styled to match whichever theme preset is currently active.
+**Action:** Once the user has selected their lens(es) (defaulting to all 3), they trigger the reveal — a button or gesture that draws animated connecting lines (via Motion's SVG path-length animation) from the center image out to each selected lens, then reveals that lens's interpretation content.
 
-## Step 4: Read the three lenses
+**Design intent:** The line-drawing animation is a signature "slightly magical" moment — lines should draw with a slight stagger if multiple lenses are selected, not all snap in at once.
 
-**Action:** User scrolls through three interpretation cards, presented as distinct, visually differentiated sections (not identical gray boxes) — Psychology, Neuroscience, Symbolism & Culture.
+## Step 4: Synthesis, scoped to current selection
 
-**Design intent:** On mobile, this is a vertical scroll, not tabs/swipe-behind-a-carousel — nothing here should be hidden behind an extra tap, since comparing the three lenses is the entire point.
+**Content:** Below or alongside the revealed lens(es), the synthesis section appears:
+- **3 lenses selected:** Common Themes, Divergent Interpretations, Reflection Questions (full three-way comparison).
+- **2 lenses selected:** Common Themes and Divergent Interpretations narrow to just those two; Reflection Questions remain.
+- **1 lens selected:** Common Themes / Divergent Interpretations don't apply — replaced by a focused single-lens reflection framing, still ending in Reflection Questions.
 
-## Step 5: See the synthesis
+**Design intent:** Reflection Questions are the one constant across every selection state — always the last thing the user reads, regardless of how they've sliced the lenses.
 
-**Action:** Below the three cards, the user reaches **Common Themes**, **Divergent Interpretations**, and **Reflection Questions** — presented as a distinct visual "landing" moment, since this is the payoff of the whole experience.
+## Step 5: Adjust and re-explore (loop, not a dead end)
 
-**Design intent:** Reflection Questions should be the last thing the user reads — open-ended, unresolved, inviting them to sit with the dream rather than close the loop with a verdict.
+**Actions available at this point, in any order:**
+- **Change lens selection** — synthesis recomputes for the new selection (a lighter follow-up request, not a full re-generation).
+- **Adjust the tone control** — triggers a genuine fresh regeneration of the lens content in the new voice, with a brief "reimagining..." transition covering the request.
+- **Copy** the current view's results to clipboard.
+- **Start over** with a new dream, returning to the Entry screen.
 
-## Step 6: Copy or start over
+**Design intent:** This is deliberately a loop, not a single linear path — the user is encouraged to keep exploring combinations (different lens selections, both tone settings) rather than treating the first result as final.
 
-**Action:** User can copy the full result to their clipboard (single tap, one clean text block) to paste into a journal, notes app, or share with a friend. A clearly separate action lets them start over with a new dream.
+## Handling generation delays and errors gracefully
 
-**Design intent:** No save, no account, no history — if they want to keep it, copying it out is the mechanism. This is a deliberate MVP boundary, not an oversight.
+- **Normal generation wait:** styled as an on-brand "reimagining..." or "consulting the lenses..." moment, not a generic spinner.
+- **Rate-limited (429) response from the LLM:** shown as a friendly, in-character message (e.g., "Lots of dreams being interpreted right now — try again in a moment") — never a raw error or blank screen. See `ai-generation-approach.md` for the technical handling.
 
 ## End state
 
-User leaves having read three genuinely different perspectives on the same dream, with language reinforcing throughout that none of them is "the answer" — just possibilities worth holding lightly.
+There isn't really a fixed "end" — the user can keep adjusting tone and lens selection for as long as they're curious, and leaves whenever they've read something that resonates, with language throughout reinforcing that none of it is "the answer."
