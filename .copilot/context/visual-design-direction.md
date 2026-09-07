@@ -12,14 +12,19 @@
 
 ## The gemstone color palette
 
-| Element | Gemstone | Hex direction | Why |
+> **Implemented.** The palette below reflects the final choices as built (Tailwind v4 `@theme` tokens in `src/index.css`, prefixed `gem-*`), which deviate from the original draft in two places: **Emerald** (not Citrine) was picked for the Symbolism & Culture lens to keep it visually distinct from the Playful tone state, and the Reflective tone state moved from **Obsidian** to **Garnet** — pure obsidian read as flat black on screen rather than a jewel tone. Obsidian's near-black/near-white shades are still used as the app's general text/background neutrals (see Typography below), just not as the Reflective tone's identifying color. A fourth gemstone, **Citrine**, was added for the synthesis (Common Themes / Divergent Interpretations / Reflection Questions) container.
+
+| Element | Gemstone | Hex (500 shade) | Why |
 |---|---|---|---|
-| Psychology lens | **Amethyst** | Deep violet (~#6B46C1 range) | Introspective, emotional, historically tied to the mind/dreams |
-| Neuroscience lens | **Sapphire** | Rich blue (~#1E5AA8 range) | Clinical, cool, "scientific" without feeling sterile |
-| Symbolism & Culture lens | **Citrine / Emerald** | Warm gold-amber or deep green (~#B8860B or #1E7A4C range) | Mythic, earthy, distinct from the other two |
-| Reflective tone state | **Obsidian/Onyx** | Near-black, deep indigo undertone | Calm, grounded, introspective mood |
-| Playful tone state | **Rose Quartz / Citrine** | Brighter pink-gold | Light, warm, lively mood |
-| Center constellation image | **Opal-like** | Subtly iridescent/shifting neutral | A stable anchor that doesn't compete with lens colors, can subtly shift with tone state |
+| Psychology lens | **Amethyst** | `#6B46C1` | Introspective, emotional, historically tied to the mind/dreams |
+| Neuroscience lens | **Sapphire** | `#1E5AA8` | Clinical, cool, "scientific" without feeling sterile |
+| Symbolism & Culture lens | **Emerald** | `#1E7A4C` | Mythic, earthy, distinct from the other two lenses |
+| Reflective tone state | **Garnet** | `#7A1F2B` (700 shade) | Deep jewel-red — calm and grounded like obsidian was meant to read, but still visibly a gemstone rather than plain black |
+| Playful tone state | **Rose Quartz** | `#DE6E8C` | Light, warm, lively mood |
+| Center constellation image | **Opal-like** | `#A9A0BF` (neutral scale) | A stable anchor that doesn't compete with lens colors, can subtly shift with tone state |
+| Synthesis container | **Citrine** | `#B8860B` | Warm gold-amber accent that reads as a distinct "4th gem" without duplicating a lens or tone color |
+
+Each lens color ships as a full scale (50/100/200/300/500/600/700/900) so selected lens elements can show full saturation while unselected/muted ones use the lighter, desaturated shades of the same hue rather than a generic gray — reinforcing selection state per-lens instead of with one shared "selected" color.
 
 **Avoid:** neon gradients, glitter/sparkle textures, anything that reads as "app for kids" or literal tarot-card imagery. The goal is calm, jewel-toned sophistication — mysterious, not gimmicky.
 
@@ -31,8 +36,9 @@
 
 ## Iconography
 
-- Simple, line-based icons for each lens, tinted in their gemstone color — a subtle brain motif for Psychology, a wave/moon-phase motif for Neuroscience, and a soft symbolic motif (a compass, open book, or abstract mask) for Symbolism & Culture, avoiding any single religious symbol.
-- The center image should read as an abstract "dreaming mind" motif (e.g., a stylized brain/cloud/constellation hybrid) — evocative, not literal or medical-looking.
+- **Implemented** as a shared `LensIcon` component (`src/components/LensIcon.jsx`), rendered on both the Constellation and Results screens: a two-lobe brain motif for Psychology, a wave/moon-phase motif for Neuroscience, and a compass-with-needle motif for Symbolism & Culture — simple stroke-based line icons (no fills, no religious symbolism), each tinted via `currentColor` so they automatically pick up the lens's gemstone color and its selected/unselected shade.
+- Lens selection no longer uses a checkmark badge — the icon and card's color/saturation are the only selection indicator, on both the Constellation screen and the Results screen (see below).
+- The center image should read as an abstract "dreaming mind" motif (e.g., a stylized brain/cloud/constellation hybrid) — evocative, not literal or medical-looking. Currently a plain opal-toned text label ("Dreaming Mind"); a dedicated static illustration asset is still open (see Imagery below).
 
 ## Motion & interaction (via Motion / Framer Motion)
 
@@ -44,9 +50,10 @@
 
 ## Typography
 
-- A humanist sans-serif for UI chrome and body copy.
-- Optional distinct serif/expressive display font for the app name and lens headers only.
+- **Implemented:** [Work Sans](https://fonts.google.com/specimen/Work+Sans) (humanist sans-serif) for all UI chrome and body copy, loaded via Google Fonts and set as the `font-sans` Tailwind theme default.
+- **Implemented:** [Fraunces](https://fonts.google.com/specimen/Fraunces) (expressive display serif) as `font-display`, applied to the app name ("Dream Reflection"), the per-screen page titles ("Choose your lenses", "Your Reflection"), and each lens's heading/label — not used for general body copy.
 - Body text sized generously for mobile reading (minimum ~16px equivalent).
+- General body/heading text color uses the Obsidian neutral scale (`gem-obsidian-*`) — this is distinct from the Reflective tone state, which is now identified by Garnet (see palette above).
 
 ## Imagery
 
@@ -57,3 +64,8 @@
 
 - The stacked mobile layout should still visually communicate "these three lenses relate to one center," even without the literal triangle — e.g., via the small anchor icon staying visible/sticky-ish near the top, or via connecting-line remnants pointing upward toward it.
 - Touch targets for lens selection (tapping to include/exclude a lens) must be comfortably thumb-sized, not tiny icons crammed together.
+
+## Results screen lens selection (implemented)
+
+- The Results screen no longer has a separate row of lens filter chips. Each lens's `InterpretationCard` is itself the toggle — tapping/clicking a card selects or deselects that lens directly, reusing the same gemstone selected/unselected treatment (and the same `LensIcon`) as the Constellation screen, so the interaction language stays consistent across both screens.
+- Deselected lenses stay visible in their muted/desaturated state rather than disappearing, so a lens can always be re-added without navigating back to the Constellation screen. At least one lens must always remain selected.
