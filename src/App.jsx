@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import EntryScreen from './components/screens/EntryScreen'
 import ConstellationScreen from './components/screens/ConstellationScreen'
+import ResultsScreen from './components/screens/ResultsScreen'
 
 const ALL_LENS_IDS = ['psychology', 'neuroscience', 'symbolism']
 
@@ -16,14 +17,24 @@ function App() {
   }
 
   function handleToggleLens(lensId) {
-    setSelectedLenses((current) =>
-      current.includes(lensId) ? current.filter((id) => id !== lensId) : [...current, lensId]
-    )
+    setSelectedLenses((current) => {
+      if (current.includes(lensId)) {
+        // Always keep at least one lens selected
+        if (current.length === 1) return current
+        return current.filter((id) => id !== lensId)
+      }
+      return [...current, lensId]
+    })
   }
 
   function handleReveal() {
     console.log('Reveal requested', { selectedLenses, tone })
     setView('results')
+  }
+
+  function handleStartOver() {
+    setDreamText('')
+    setView('entry')
   }
 
   return (
@@ -47,9 +58,13 @@ function App() {
       )}
 
       {view === 'results' && (
-        <div className="flex items-center justify-center min-h-screen text-gray-500">
-          Results screen coming soon.
-        </div>
+        <ResultsScreen
+          tone={tone}
+          onToneChange={setTone}
+          selectedLenses={selectedLenses}
+          onToggleLens={handleToggleLens}
+          onStartOver={handleStartOver}
+        />
       )}
     </main>
   )

@@ -1,10 +1,11 @@
 import ToneControl from '../ToneControl'
+import { LENSES } from '../../lensData'
 
-const LENSES = [
-  { id: 'psychology', label: 'Psychology', position: 'md:top-2 md:left-1/2 md:-translate-x-1/2' },
-  { id: 'neuroscience', label: 'Neuroscience', position: 'md:bottom-2 md:left-2' },
-  { id: 'symbolism', label: 'Symbolism & Culture', position: 'md:bottom-2 md:right-2' },
-]
+const LENS_POSITIONS = {
+  psychology: 'md:top-2 md:left-1/2 md:-translate-x-1/2',
+  neuroscience: 'md:bottom-2 md:left-2',
+  symbolism: 'md:bottom-2 md:right-2',
+}
 
 function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens, onReveal }) {
   const hasSelection = selectedLenses.length > 0
@@ -41,7 +42,7 @@ function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens,
               type="button"
               onClick={() => onToggleLens(lens.id)}
               aria-pressed={selected}
-              className={`relative w-full max-w-xs min-h-24 flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-4 text-center font-medium transition-colors md:absolute md:w-32 md:h-32 ${lens.position} ${
+              className={`relative w-full max-w-xs min-h-24 flex flex-col items-center justify-center gap-1 rounded-xl border-2 p-4 text-center font-medium transition-colors md:absolute md:w-32 md:h-32 ${LENS_POSITIONS[lens.id]} ${
                 selected
                   ? 'border-purple-500 bg-purple-50 text-purple-900'
                   : 'border-gray-300 border-dashed bg-gray-100 text-gray-400 grayscale'
