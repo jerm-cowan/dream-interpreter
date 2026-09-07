@@ -1,4 +1,4 @@
-# Visual Design Direction — Dream Reflection
+# Visual Design Direction — Dream Interpreter
 
 ## Design goals, restated as visual direction
 

@@ -1,4 +1,4 @@
-# Nice-to-Have Features — Dream Reflection
+# Nice-to-Have Features — Dream Interpreter
 
 These are explicitly **not** part of MVP. They're recorded here so future-you (or a reviewer reading the repo) understands they were considered and deliberately deferred, not forgotten. If you build any of these, update `BRIEF.md`'s scope section to reflect the change — don't let this doc drift from what's actually built.
 

@@ -1,4 +1,4 @@
-# User Personas — Dream Reflection
+# User Personas — Dream Interpreter
 
 Two personas, representing the two most common motivations for opening this app. Both are the same "core user" described in the brief, just entering with slightly different energy — the product should serve both without forcing them into different modes.
 
@@ -27,7 +27,7 @@ Two personas, representing the two most common motivations for opening this app.
 
 **Age/context:** 34, software engineer, enjoys pop psychology and folklore but doesn't believe dreams "mean" anything literal.
 
-**Scenario:** Theo's partner mentioned a bizarre dream at breakfast (being chased by a talking vending machine) and joked "what do you think that means?" Theo pulls out Dream Reflection half as a joke, half genuinely curious what different frameworks would say.
+**Scenario:** Theo's partner mentioned a bizarre dream at breakfast (being chased by a talking vending machine) and joked "what do you think that means?" Theo pulls out Dream Interpreter half as a joke, half genuinely curious what different frameworks would say.
 
 **Goals:**
 - Compare the "serious" science-adjacent explanation with the folklore/symbolism take, mostly for fun and conversation.

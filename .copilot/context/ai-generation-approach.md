@@ -1,4 +1,4 @@
-# AI Generation Approach — Dream Reflection
+# AI Generation Approach — Dream Interpreter
 
 This doc exists to answer one question precisely, so Copilot (and future-you) never has to guess: **how does this app generate a legitimate-feeling interpretation for literally any dream, without pre-written templates, and without building full RAG/a vector database?**
 

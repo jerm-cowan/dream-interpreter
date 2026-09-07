@@ -1,4 +1,4 @@
-# Information Architecture — Dream Reflection
+# Information Architecture — Dream Interpreter
 
 This is a **single-screen app** (one React view, no router) — there is no multi-page navigation and no menu structure. The "architecture" here is about vertical content hierarchy on one page, and the states that page can be in.
 

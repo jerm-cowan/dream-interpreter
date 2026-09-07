@@ -1,4 +1,4 @@
-# User Journey — Dream Reflection
+# User Journey — Dream Interpreter
 
 A single-session journey, designed to be completed in under two minutes on a phone, start to finish.
 

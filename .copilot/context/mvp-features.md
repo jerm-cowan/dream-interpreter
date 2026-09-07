@@ -1,4 +1,4 @@
-# MVP Features — Dream Reflection
+# MVP Features — Dream Interpreter
 
 These are the features required for the build to satisfy the Protogen case study rubric ("core flows work end to end," matches the brief). Nothing here is optional for v1.
 

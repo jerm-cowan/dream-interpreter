@@ -1,4 +1,4 @@
-# Development Phases — Dream Reflection (Protogen Case Study Build Plan)
+# Development Phases — Dream Interpreter (Protogen Case Study Build Plan)
 
 This plan is structured to satisfy all three Protogen case study review areas — the build works end-to-end, the repo/AI scaffolding is in place with real commit history over time, and the design visibly reflects planning captured in `BRIEF.md` — while following the same prompt → review → keep/undo → deploy rhythm used throughout Protogen.
 
@@ -8,7 +8,8 @@ Aim for **multiple commits per phase**, not one commit per phase. Reviewers expl
 - Initialize the repo, set up the project folder, install the base toolchain (VS Code, GitHub Copilot, Node.js, Vercel-linked repo).
 - Write `BRIEF.md` first, before prompting Copilot for any code — this is the single highest-leverage step, since a vague brief produces a generic build.
 - Create the `.copilot/context/` docs (this folder) so Copilot has grounding context from the very first prompt, not bolted on afterward.
-- Commit: `chore: scaffold repo, add BRIEF.md and context docs`
+- Commit: Initialize repo with documents and scaffolding.
+
 
 ## Phase 1 — Scaffold the React Project
 - Have Copilot scaffold a new React project using Vite.

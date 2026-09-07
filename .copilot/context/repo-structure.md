@@ -1,9 +1,9 @@
-# Suggested Repo Structure & AI Scaffolding — Dream Reflection
+# Suggested Repo Structure & AI Scaffolding — Dream Interpreter
 
 This is the target structure for the full project repo once code is added. The docs delivered alongside this file are already placed where they belong in this structure — you can drop them straight into a new repo. The `src/` layout below reflects a standard Vite + React scaffold with Tailwind and Motion added.
 
 ```
-dream-reflection/
+dream-interpreter/
 ├── README.md                          # Project overview, what/why, how to run it
 ├── LICENSE                             # MIT (or your preferred license)
 ├── BRIEF.md                            # The design spec — read first, kept in sync with the build

@@ -1,8 +1,8 @@
-# Project Brief: Dream Reflection
+# Project Brief: Dream Interpreter
 
 ## 1. Summary
 
-**Dream Reflection** is a single-session, mobile-first web app that helps someone explore what a memorable dream might mean — not by giving them one "correct" answer, but by showing them three different lenses (psychology, neuroscience, and symbolism/culture) side by side, then surfacing where those lenses agree, where they diverge, and what questions might be worth sitting with afterward.
+**Dream Interpreter** is a single-session, mobile-first web app that helps someone explore what a memorable dream might mean — not by giving them one "correct" answer, but by showing them three different lenses (psychology, neuroscience, and symbolism/culture) side by side, then surfacing where those lenses agree, where they diverge, and what questions might be worth sitting with afterward.
 
 This is a **Protogen P303 (Mobile Experience) case study**. The scenario is self-defined (wellness/self-reflection) rather than pulled from the standard industry table, which the case study instructions explicitly allow. The build should feel like a real, scoped client engagement in the personal wellness/reflection space — not a generic template with a dream theme bolted on.
 
@@ -20,7 +20,7 @@ They are most likely opening this on their phone — right after waking up, on a
 
 ## 3. Core Value Proposition
 
-Most dream interpretation tools (apps, chatbots, "dream dictionaries") give a single, confident-sounding explanation. **Dream Reflection instead helps users compare multiple ways of understanding the same dream and decide which perspective(s) resonate with them.** The comparison itself — not any single answer — is the product.
+Most dream interpretation tools (apps, chatbots, "dream dictionaries") give a single, confident-sounding explanation. **Dream Interpreter instead helps users compare multiple ways of understanding the same dream and decide which perspective(s) resonate with them.** The comparison itself — not any single answer — is the product.
 
 ## 4. Core Workflow
 

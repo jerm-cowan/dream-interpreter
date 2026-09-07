@@ -1,8 +1,8 @@
-# Dream Reflection
+# Dream Interpreter
 
 A mobile-first React web app that helps you explore what a memorable dream might mean — through three different lenses, side by side, instead of one single answer.
 
-> Dream Reflection does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
+> Dream Interpreter does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
 
 ## What it does
 
@@ -17,7 +17,7 @@ A mobile-first React web app that helps you explore what a memorable dream might
 
 ## Why this exists
 
-Most dream interpretation tools hand you a single confident-sounding explanation. Dream Reflection instead lets you compare frameworks and decide what resonates — closer to a reflective journaling exercise than a fortune-telling app.
+Most dream interpretation tools hand you a single confident-sounding explanation. Dream Interpreter instead lets you compare frameworks and decide what resonates — closer to a reflective journaling exercise than a fortune-telling app.
 
 ## MVP scope
 
@@ -58,7 +58,7 @@ This repo's AI scaffolding lives in [`.copilot/context/`](./.copilot/context/) a
 ```bash
 # clone and install
 git clone <your-repo-url>
-cd dream-reflection
+cd dream-interpreter
 npm install
 
 # run locally
