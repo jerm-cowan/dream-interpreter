@@ -8,14 +8,22 @@ import BackButton from '../BackButton'
 import { LENS_STROKE, REVEAL_LINE_TIMING } from '../ConnectingLines'
 import { LENSES } from '../../lensData'
 
-const LENS_PLACEHOLDER =
-  'Placeholder text — a paragraph describing how this lens might read the dream will appear here once generation is wired up.'
-
-const SYNTHESIS_PLACEHOLDER =
-  'Placeholder text — synthesis content will appear here once generation is wired up.'
-
-function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onStartOver, fast = false }) {
+function ResultsScreen({
+  tone,
+  onToneChange,
+  selectedLenses,
+  onToggleLens,
+  onStartOver,
+  fast = false,
+  generatedLenses,
+  synthesis,
+  loadingState = 'idle',
+  dataVersion = 0,
+}) {
   const isSingleLens = selectedLenses.length === 1
+  const isGenerating = loadingState === 'generating'
+  const isSynthesizing = loadingState === 'synthesizing'
+  const isBusy = isGenerating || isSynthesizing
 
   // Measured (not percentage) geometry, since card/synthesis heights aren't fixed like the Constellation triangle
   const gridRef = useRef(null)
@@ -96,7 +104,10 @@ function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onSta
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
           Your Reflection
         </h2>
-        <ToneControl value={tone} onChange={onToneChange} />
+        <ToneControl value={tone} onChange={onToneChange} disabled={isGenerating} />
+        {isGenerating && (
+          <p className="text-sm text-gem-obsidian-500/80 italic">Reimagining your dream in a new voice...</p>
+        )}
       </header>
 
       <div ref={gridRef} className="relative w-full max-w-3xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:items-center">
@@ -135,7 +146,8 @@ function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onSta
         )}
 
         <motion.section
-          className="flex flex-col gap-8"
+          key={`cards-${dataVersion}`}
+          className={`flex flex-col gap-8 transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
           variants={cardContainerVariants}
           initial="hidden"
           animate="visible"
@@ -151,30 +163,35 @@ function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onSta
               <InterpretationCard
                 lensId={lens.id}
                 lens={lens.label}
-                body={LENS_PLACEHOLDER}
+                body={generatedLenses?.[lens.id] ?? ''}
                 selected={selectedLenses.includes(lens.id)}
-                onToggle={() => onToggleLens(lens.id)}
+                onToggle={() => !isBusy && onToggleLens(lens.id)}
               />
             </motion.div>
           ))}
         </motion.section>
 
         <motion.section
+          key={`synthesis-${dataVersion}`}
           ref={synthesisRef}
-          className="rounded-xl border border-gem-citrine-200 bg-gem-citrine-50/50 p-5 flex flex-col items-center justify-center gap-6"
+          className={`rounded-xl border border-gem-citrine-200 bg-gem-citrine-50/50 p-5 flex flex-col items-center justify-center gap-6 transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
           variants={synthesisVariants}
           initial="hidden"
           animate="visible"
         >
           {isSingleLens ? (
-            <SynthesisSection heading="Single-Lens Reflection" body={SYNTHESIS_PLACEHOLDER} divider={false} />
+            <SynthesisSection
+              heading="Single-Lens Reflection"
+              body={synthesis?.singleLensReflection ?? ''}
+              divider={false}
+            />
           ) : (
             <>
-              <SynthesisSection heading="Common Themes" body={SYNTHESIS_PLACEHOLDER} divider={false} />
-              <SynthesisSection heading="Divergent Interpretations" body={SYNTHESIS_PLACEHOLDER} />
+              <SynthesisSection heading="Common Themes" body={synthesis?.commonThemes ?? ''} divider={false} />
+              <SynthesisSection heading="Divergent Interpretations" body={synthesis?.divergentInterpretations ?? ''} />
             </>
           )}
-          <SynthesisSection heading="Reflection Questions" body={SYNTHESIS_PLACEHOLDER} />
+          <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
         </motion.section>
       </div>
 

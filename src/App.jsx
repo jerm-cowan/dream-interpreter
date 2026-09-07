@@ -3,8 +3,19 @@ import { AnimatePresence, motion } from 'motion/react'
 import EntryScreen from './components/screens/EntryScreen'
 import ConstellationScreen from './components/screens/ConstellationScreen'
 import ResultsScreen from './components/screens/ResultsScreen'
+import ErrorOverlay from './components/ErrorOverlay'
+import { interpretDream, synthesizeLenses } from './api/generation'
 
 const ALL_LENS_IDS = ['psychology', 'neuroscience', 'symbolism']
+
+function computeNextSelection(current, lensId) {
+  if (current.includes(lensId)) {
+    // Always keep at least one lens selected
+    if (current.length === 1) return current
+    return current.filter((id) => id !== lensId)
+  }
+  return [...current, lensId]
+}
 
 // Per-screen enter/exit shapes for AnimatePresence — exits stay quick so the user is never waiting on them
 const SCREEN_MOTION = {
@@ -36,6 +47,16 @@ function App() {
   // First reveal plays the full signature timing; later reveals (after a lens-selection change) are snappier
   const [revealCount, setRevealCount] = useState(0)
 
+  const [generatedLenses, setGeneratedLenses] = useState(null)
+  const [synthesisAll3, setSynthesisAll3] = useState(null)
+  const [synthesis, setSynthesis] = useState(null)
+  // Bumped whenever fresh generated/synthesis content lands, so Results can replay its reveal
+  // animation as the "visual cover" for tone/lens-selection updates instead of a new spinner
+  const [dataVersion, setDataVersion] = useState(0)
+  const [loadingState, setLoadingState] = useState('idle')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [retryAction, setRetryAction] = useState(null)
+
   // Sync app view state with browser history so the back button (in-app or browser) works
   useEffect(() => {
     window.history.replaceState({ view: 'entry' }, '')
@@ -55,30 +76,120 @@ function App() {
     window.history.pushState({ view: nextView }, '')
   }
 
-  function handleDreamSubmit() {
-    setSelectedLenses(ALL_LENS_IDS)
-    setRevealCount(0)
-    navigateTo('constellation')
-  }
-
-  function handleToggleLens(lensId) {
-    setSelectedLenses((current) => {
-      if (current.includes(lensId)) {
-        // Always keep at least one lens selected
-        if (current.length === 1) return current
-        return current.filter((id) => id !== lensId)
+  // Tier 1: full generation for a given tone. Used for both the initial submit and tone changes.
+  async function generateInterpretation(toneValue) {
+    setLoadingState('generating')
+    setErrorMessage(null)
+    try {
+      const result = await interpretDream({ dreamText, tone: toneValue })
+      const lenses = {
+        psychology: result.psychology,
+        neuroscience: result.neuroscience,
+        symbolism: result.symbolism,
       }
-      return [...current, lensId]
-    })
+      setGeneratedLenses(lenses)
+      setSynthesisAll3(result.synthesis_all3)
+      setDataVersion((v) => v + 1)
+      setLoadingState('idle')
+      return { lenses, synthesisAll3: result.synthesis_all3 }
+    } catch (err) {
+      setErrorMessage(err.message)
+      setLoadingState('error')
+      setRetryAction(() => () => generateInterpretation(toneValue))
+      throw err
+    }
   }
 
-  function handleReveal() {
-    setRevealCount((count) => count + 1)
-    navigateTo('results')
+  // Recomputes the synthesis section for a lens selection. All 3 lenses reuse the cached Tier 1
+  // synthesis (no network call); 1-2 lenses call the lighter Tier 2 synthesis endpoint.
+  async function recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3) {
+    if (lenses.length === 3) {
+      setSynthesis(cachedAll3)
+      setDataVersion((v) => v + 1)
+      setLoadingState('idle')
+      return
+    }
+
+    setLoadingState('synthesizing')
+    setErrorMessage(null)
+    try {
+      const selectedLensTexts = {}
+      lenses.forEach((id) => {
+        selectedLensTexts[id] = lensTexts[id]
+      })
+      const result = await synthesizeLenses({ selectedLensTexts, tone: toneValue, lensCount: lenses.length })
+      setSynthesis(result)
+      setDataVersion((v) => v + 1)
+      setLoadingState('idle')
+    } catch (err) {
+      setErrorMessage(err.message)
+      setLoadingState('error')
+      setRetryAction(() => () => recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3))
+      throw err
+    }
+  }
+
+  async function handleDreamSubmit() {
+    try {
+      const { lenses, synthesisAll3: freshAll3 } = await generateInterpretation(tone)
+      setSelectedLenses(ALL_LENS_IDS)
+      setRevealCount(0)
+      setSynthesis(freshAll3)
+      navigateTo('constellation')
+    } catch {
+      // Error UI is already shown via loadingState; user retries from the overlay.
+    }
+  }
+
+  // Constellation-screen toggling: selection only, no recomputation until Reveal is pressed.
+  function handleToggleLens(lensId) {
+    setSelectedLenses((current) => computeNextSelection(current, lensId))
+  }
+
+  // Results-screen toggling: selection change triggers a Tier 2-only recomputation immediately.
+  async function handleToggleLensInResults(lensId) {
+    const next = computeNextSelection(selectedLenses, lensId)
+    if (next === selectedLenses) return
+    setSelectedLenses(next)
+    try {
+      await recomputeSynthesis(next, generatedLenses, tone, synthesisAll3)
+    } catch {
+      // Error UI is already shown; retry recomputes the same selection.
+    }
+  }
+
+  async function handleReveal() {
+    try {
+      await recomputeSynthesis(selectedLenses, generatedLenses, tone, synthesisAll3)
+      setRevealCount((count) => count + 1)
+      navigateTo('results')
+    } catch {
+      // Error UI is already shown; stays on Constellation.
+    }
+  }
+
+  async function handleToneChange(nextTone) {
+    setTone(nextTone)
+    if (!generatedLenses) return
+    try {
+      const { lenses, synthesisAll3: freshAll3 } = await generateInterpretation(nextTone)
+      await recomputeSynthesis(selectedLenses, lenses, nextTone, freshAll3)
+    } catch {
+      // Error UI is already shown.
+    }
+  }
+
+  function handleRetry() {
+    const action = retryAction
+    setRetryAction(null)
+    action?.()
   }
 
   function handleStartOver() {
     setDreamText('')
+    setGeneratedLenses(null)
+    setSynthesisAll3(null)
+    setSynthesis(null)
     navigateTo('entry')
   }
 
@@ -91,6 +202,7 @@ function App() {
               dreamText={dreamText}
               onDreamTextChange={setDreamText}
               onSubmit={handleDreamSubmit}
+              loadingState={loadingState}
             />
           </motion.div>
         )}
@@ -99,11 +211,12 @@ function App() {
           <motion.div key={`constellation-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.constellation}>
             <ConstellationScreen
               tone={tone}
-              onToneChange={setTone}
+              onToneChange={handleToneChange}
               selectedLenses={selectedLenses}
               onToggleLens={handleToggleLens}
               onReveal={handleReveal}
               fast={revealCount > 0}
+              loadingState={loadingState}
             />
           </motion.div>
         )}
@@ -112,14 +225,22 @@ function App() {
           <motion.div key={`results-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.results}>
             <ResultsScreen
               tone={tone}
-              onToneChange={setTone}
+              onToneChange={handleToneChange}
               selectedLenses={selectedLenses}
-              onToggleLens={handleToggleLens}
+              onToggleLens={handleToggleLensInResults}
               onStartOver={handleStartOver}
               fast={revealCount > 1}
+              generatedLenses={generatedLenses}
+              synthesis={synthesis}
+              loadingState={loadingState}
+              dataVersion={dataVersion}
             />
           </motion.div>
         )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {loadingState === 'error' && <ErrorOverlay message={errorMessage} onRetry={handleRetry} />}
       </AnimatePresence>
     </main>
   )

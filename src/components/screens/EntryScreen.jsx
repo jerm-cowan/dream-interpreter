@@ -1,9 +1,11 @@
 import DreamInput from '../DreamInput'
 
-function EntryScreen({ dreamText, onDreamTextChange, onSubmit }) {
+function EntryScreen({ dreamText, onDreamTextChange, onSubmit, loadingState = 'idle' }) {
+  const isGenerating = loadingState === 'generating'
+
   function handleSubmit(event) {
     event.preventDefault()
-    if (!dreamText.trim()) return
+    if (!dreamText.trim() || isGenerating) return
     onSubmit()
   }
 
@@ -21,10 +23,10 @@ function EntryScreen({ dreamText, onDreamTextChange, onSubmit }) {
 
         <button
           type="submit"
-          disabled={!dreamText.trim()}
+          disabled={!dreamText.trim() || isGenerating}
           className="w-full min-h-12 rounded-lg bg-gem-amethyst-600 text-white font-semibold text-base py-3 hover:bg-gem-amethyst-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          Explore This Dream
+          {isGenerating ? 'Consulting the lenses...' : 'Explore This Dream'}
         </button>
       </form>
     </div>

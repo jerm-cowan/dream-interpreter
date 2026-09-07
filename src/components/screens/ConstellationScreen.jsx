@@ -18,8 +18,12 @@ function ConstellationScreen({
   onToggleLens,
   onReveal,
   fast = false,
+  loadingState = 'idle',
 }) {
   const hasSelection = selectedLenses.length > 0
+  const isGenerating = loadingState === 'generating'
+  const isSynthesizing = loadingState === 'synthesizing'
+  const isBusy = isGenerating || isSynthesizing
 
   return (
     <div className="relative min-h-screen flex flex-col items-center gap-12 px-6 py-12">
@@ -28,7 +32,10 @@ function ConstellationScreen({
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
           Choose your lenses
         </h2>
-        <ToneControl value={tone} onChange={onToneChange} />
+        <ToneControl value={tone} onChange={onToneChange} disabled={isGenerating} />
+        {isGenerating && (
+          <p className="text-sm text-gem-obsidian-500/80 italic">Reimagining your dream in a new voice...</p>
+        )}
       </header>
 
       {/* Stacked on mobile; absolutely positioned into a triangle around the center from md up */}
@@ -73,10 +80,10 @@ function ConstellationScreen({
       <button
         type="button"
         onClick={onReveal}
-        disabled={!hasSelection}
+        disabled={!hasSelection || isBusy}
         className="w-full max-w-xs min-h-12 rounded-lg bg-gem-amethyst-600 text-white font-semibold text-base py-3 hover:bg-gem-amethyst-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        Reveal
+        {isSynthesizing ? 'Consulting the lenses...' : 'Reveal'}
       </button>
     </div>
   )
