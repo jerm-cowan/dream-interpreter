@@ -16,9 +16,9 @@ const DESKTOP_LINE_ENDPOINTS = {
 }
 
 const LENS_STROKE = {
-  psychology: 'stroke-gem-amethyst-500',
-  neuroscience: 'stroke-gem-sapphire-500',
-  symbolism: 'stroke-gem-emerald-500',
+  psychology: 'stroke-gem-amethyst-300',
+  neuroscience: 'stroke-gem-sapphire-300',
+  symbolism: 'stroke-gem-emerald-300',
 }
 
 export { LENS_STROKE }
@@ -45,7 +45,7 @@ function ConnectingLines({ selectedLenses, fast = false }) {
             y1={y1}
             x2={x2}
             y2={y2}
-            strokeWidth="0.9"
+            strokeWidth="0.6"
             strokeLinecap="round"
             className={LENS_STROKE[lens.id]}
             initial={{ pathLength: 0, opacity: 0 }}

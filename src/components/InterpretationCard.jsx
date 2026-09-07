@@ -9,7 +9,7 @@ function InterpretationCard({ lensId, lens, body, selected, onToggle }) {
       type="button"
       onClick={onToggle}
       aria-pressed={selected}
-      className={`w-full text-left rounded-xl border-2 p-5 flex flex-col gap-3 transition-colors ${
+      className={`w-full text-left rounded-xl border p-5 flex flex-col gap-3 transition-colors ${
         selected ? styles.selected : styles.unselected
       }`}
     >
@@ -17,7 +17,9 @@ function InterpretationCard({ lensId, lens, body, selected, onToggle }) {
         <LensIcon id={lensId} className={`w-6 h-6 shrink-0 ${selected ? styles.icon : styles.unselectedIcon}`} />
         {lens}
       </h3>
-      <p className={`text-base leading-relaxed ${selected ? 'text-gem-obsidian-700' : ''}`}>{body}</p>
+      <p className={`text-base leading-relaxed ${selected ? 'text-gem-obsidian-700' : 'text-gem-obsidian-300'}`}>
+        {body}
+      </p>
     </button>
   )
 }

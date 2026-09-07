@@ -59,7 +59,7 @@ function ConstellationScreen({
               type="button"
               onClick={() => onToggleLens(lens.id)}
               aria-pressed={selected}
-              className={`relative w-full max-w-xs min-h-24 flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-4 text-center font-medium transition-colors md:absolute md:w-32 md:h-32 ${LENS_POSITIONS[lens.id]} ${
+              className={`relative w-full max-w-xs min-h-24 flex flex-col items-center justify-center gap-2 rounded-xl border p-4 text-center font-medium transition-colors md:absolute md:w-32 md:h-32 ${LENS_POSITIONS[lens.id]} ${
                 selected ? styles.selected : styles.unselected
               }`}
             >

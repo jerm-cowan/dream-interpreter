@@ -118,7 +118,7 @@ function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onSta
                   y1={source.y}
                   x2={lineGeometry.target.x}
                   y2={lineGeometry.target.y}
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   className={LENS_STROKE[lens.id]}
                   initial={{ pathLength: 0, opacity: 0 }}
@@ -161,7 +161,7 @@ function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onSta
 
         <motion.section
           ref={synthesisRef}
-          className="rounded-xl border-2 border-gem-citrine-300 bg-gem-citrine-50 p-5 flex flex-col items-center justify-center gap-6"
+          className="rounded-xl border border-gem-citrine-200 bg-gem-citrine-50/50 p-5 flex flex-col items-center justify-center gap-6"
           variants={synthesisVariants}
           initial="hidden"
           animate="visible"
