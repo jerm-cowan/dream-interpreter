@@ -2,6 +2,7 @@ import { Brain } from 'lucide-react'
 import ToneControl from '../ToneControl'
 import LensIcon from '../LensIcon'
 import BackButton from '../BackButton'
+import ConnectingLines from '../ConnectingLines'
 import { LENSES, LENS_STYLES } from '../../lensData'
 
 const LENS_POSITIONS = {
@@ -10,7 +11,14 @@ const LENS_POSITIONS = {
   symbolism: 'md:bottom-2 md:right-2',
 }
 
-function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens, onReveal }) {
+function ConstellationScreen({
+  tone,
+  onToneChange,
+  selectedLenses,
+  onToggleLens,
+  onReveal,
+  fast = false,
+}) {
   const hasSelection = selectedLenses.length > 0
 
   return (
@@ -35,6 +43,8 @@ function ConstellationScreen({ tone, onToneChange, selectedLenses, onToggleLens,
           <line x1="50" y1="54.9" x2="30.4" y2="69.6" className="stroke-gem-opal-300" strokeWidth="0.5" />
           <line x1="50" y1="54.9" x2="69.6" y2="69.6" className="stroke-gem-opal-300" strokeWidth="0.5" />
         </svg>
+
+        <ConnectingLines selectedLenses={selectedLenses} fast={fast} />
 
         <div className="relative w-16 h-16 flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm md:absolute md:top-[54.9%] md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-40 md:h-40">
           <Brain className="w-9 h-9 text-gem-opal-700 md:w-20 md:h-20" strokeWidth={1.5} />
