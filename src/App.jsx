@@ -38,7 +38,7 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gem-opal-50 font-sans text-gem-obsidian-700">
       {view === 'entry' && (
         <EntryScreen
           dreamText={dreamText}

@@ -1,25 +1,91 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+@theme {
+  --font-sans: 'Work Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+
+  /* Psychology lens: deep violet */
+  --color-gem-amethyst-50: #f5f0fc;
+  --color-gem-amethyst-100: #e7d9f7;
+  --color-gem-amethyst-200: #d2baf0;
+  --color-gem-amethyst-300: #b896e3;
+  --color-gem-amethyst-500: #6b46c1;
+  --color-gem-amethyst-600: #5b3aae;
+  --color-gem-amethyst-700: #4c2e93;
+  --color-gem-amethyst-900: #2e1b5c;
+
+  /* Neuroscience lens: rich blue */
+  --color-gem-sapphire-50: #ebf2fb;
+  --color-gem-sapphire-100: #d2e2f5;
+  --color-gem-sapphire-200: #a8c7ea;
+  --color-gem-sapphire-300: #7aa8dc;
+  --color-gem-sapphire-500: #1e5aa8;
+  --color-gem-sapphire-600: #184a8c;
+  --color-gem-sapphire-700: #143e77;
+  --color-gem-sapphire-900: #0d2a50;
+
+  /* Symbolism & Culture lens: deep emerald */
+  --color-gem-emerald-50: #eaf7f0;
+  --color-gem-emerald-100: #cbebd9;
+  --color-gem-emerald-200: #9dd6b7;
+  --color-gem-emerald-300: #6bbe91;
+  --color-gem-emerald-500: #1e7a4c;
+  --color-gem-emerald-600: #19653f;
+  --color-gem-emerald-700: #145234;
+  --color-gem-emerald-900: #0c3620;
+
+  /* Reflective tone state: obsidian/onyx */
+  --color-gem-obsidian-50: #f1f0f4;
+  --color-gem-obsidian-300: #7c7889;
+  --color-gem-obsidian-500: #2a2733;
+  --color-gem-obsidian-700: #1a1822;
+  --color-gem-obsidian-900: #0f0d14;
+
+  /* Reflective tone state accent: deep garnet (obsidian read as plain black, garnet keeps it jewel-toned) */
+  --color-gem-garnet-50: #fbecec;
+  --color-gem-garnet-100: #f3d0d2;
+  --color-gem-garnet-300: #c97b82;
+  --color-gem-garnet-500: #7a1f2b;
+  --color-gem-garnet-600: #661a24;
+  --color-gem-garnet-700: #52151d;
+  --color-gem-garnet-900: #330d12;
+
+  /* Playful tone state: rose quartz */
+  --color-gem-rose-50: #fdf1f5;
+  --color-gem-rose-100: #fbdce7;
+  --color-gem-rose-300: #f3a9c4;
+  --color-gem-rose-500: #de6e8c;
+  --color-gem-rose-600: #c85578;
+  --color-gem-rose-700: #a83f60;
+  --color-gem-rose-900: #6b2740;
+
+  /* Center constellation element: opal-like neutral */
+  --color-gem-opal-50: #f7f5fa;
+  --color-gem-opal-100: #edeaf2;
+  --color-gem-opal-200: #ddd8e6;
+  --color-gem-opal-300: #c7c0d6;
+  --color-gem-opal-500: #a9a0bf;
+  --color-gem-opal-700: #6b637f;
+
+  /* Synthesis container: warm citrine */
+  --color-gem-citrine-50: #fbf5e6;
+  --color-gem-citrine-100: #f5e6bf;
+  --color-gem-citrine-200: #eccd85;
+  --color-gem-citrine-300: #ddab3f;
+  --color-gem-citrine-500: #b8860b;
+  --color-gem-citrine-600: #9c7009;
+  --color-gem-citrine-700: #7d5a08;
+  --color-gem-citrine-900: #503a05;
+}
 
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --text: #4b4658;
+  --bg: #faf9fc;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  font: 18px/150% var(--font-sans);
+  letter-spacing: 0.1px;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -29,26 +95,6 @@
 
   @media (max-width: 1024px) {
     font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
   }
 }
 
@@ -63,46 +109,6 @@ body {
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }

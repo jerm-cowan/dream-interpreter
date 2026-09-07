@@ -10,46 +10,32 @@ const SYNTHESIS_PLACEHOLDER =
   'Placeholder text — synthesis content will appear here once generation is wired up.'
 
 function ResultsScreen({ tone, onToneChange, selectedLenses, onToggleLens, onStartOver }) {
-  const revealedLenses = LENSES.filter((lens) => selectedLenses.includes(lens.id))
-  const isSingleLens = revealedLenses.length === 1
+  const isSingleLens = selectedLenses.length === 1
 
   return (
     <div className="min-h-screen flex flex-col gap-8 px-4 py-8">
       <header className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
-        <h2 className="text-xl font-semibold text-center">Your Reflection</h2>
+        <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
+          Your Reflection
+        </h2>
         <ToneControl value={tone} onChange={onToneChange} />
-
-        {/* Lens selection stays adjustable here; toggling will drive synthesis recomputation in a later phase */}
-        <div className="flex flex-wrap justify-center gap-2">
-          {LENSES.map((lens) => {
-            const selected = selectedLenses.includes(lens.id)
-            return (
-              <button
-                key={lens.id}
-                type="button"
-                onClick={() => onToggleLens(lens.id)}
-                aria-pressed={selected}
-                className={`rounded-full border-2 px-3 py-1 text-sm font-medium transition-colors ${
-                  selected
-                    ? 'border-purple-500 bg-purple-50 text-purple-900'
-                    : 'border-gray-300 border-dashed bg-gray-100 text-gray-400 grayscale'
-                }`}
-              >
-                {lens.label}
-              </button>
-            )
-          })}
-        </div>
       </header>
 
       <div className="w-full max-w-3xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-stretch">
         <section className="flex flex-col gap-4">
-          {revealedLenses.map((lens) => (
-            <InterpretationCard key={lens.id} lens={lens.label} body={LENS_PLACEHOLDER} />
+          {LENSES.map((lens) => (
+            <InterpretationCard
+              key={lens.id}
+              lensId={lens.id}
+              lens={lens.label}
+              body={LENS_PLACEHOLDER}
+              selected={selectedLenses.includes(lens.id)}
+              onToggle={() => onToggleLens(lens.id)}
+            />
           ))}
         </section>
 
-        <section className="rounded-xl border border-gray-300 p-5 bg-white flex flex-col gap-4 lg:justify-between">
+        <section className="rounded-xl border-2 border-gem-citrine-300 bg-gem-citrine-50 p-5 flex flex-col gap-4 lg:justify-between">
           {isSingleLens ? (
             <SynthesisSection heading="Single-Lens Reflection" body={SYNTHESIS_PLACEHOLDER} divider={false} />
           ) : (

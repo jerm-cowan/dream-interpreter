@@ -8,11 +8,13 @@ function EntryScreen({ dreamText, onDreamTextChange, onSubmit }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8">
-      <form onSubmit={handleSubmit} className="w-full max-w-xl flex flex-col gap-6">
-        <header className="flex flex-col gap-1 text-center">
-          <h1 className="text-2xl font-bold">Dream Reflection</h1>
-          <p className="text-gray-600 text-base">What did you dream last night?</p>
+    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+      <form onSubmit={handleSubmit} className="w-full max-w-xl flex flex-col gap-8">
+        <header className="flex flex-col gap-2 text-center">
+          <h1 className="font-display text-3xl md:text-4xl font-semibold text-gem-obsidian-900 tracking-tight">
+            Dream Reflection
+          </h1>
+          <p className="text-gem-obsidian-500/80 text-base md:text-lg">What did you dream last night?</p>
         </header>
 
         <DreamInput value={dreamText} onChange={onDreamTextChange} />
@@ -20,7 +22,7 @@ function EntryScreen({ dreamText, onDreamTextChange, onSubmit }) {
         <button
           type="submit"
           disabled={!dreamText.trim()}
-          className="w-full min-h-12 rounded-lg bg-purple-600 text-white font-semibold text-base py-3 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full min-h-12 rounded-lg bg-gem-amethyst-600 text-white font-semibold text-base py-3 hover:bg-gem-amethyst-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Explore This Dream
         </button>
