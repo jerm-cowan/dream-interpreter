@@ -1,7 +1,6 @@
 // Tier 1 full-generation endpoint: interprets a dream across 3 lenses + synthesis in one Gemini call.
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+import { callGemini, isRateLimitError, RATE_LIMIT_RESPONSE } from './_gemini.js';
 
 const RESPONSE_SCHEMA = {
   type: 'OBJECT',
@@ -64,62 +63,6 @@ function buildPrompt(dreamText, tone) {
   return `A person shared this dream: "${dreamText}"\n\nInterpret it through the psychology, neuroscience, and symbolism/cultural lenses, then synthesize across all three. Tone: ${tone} (this affects voice/style only — it must never change which frameworks or traditions are drawn from, or which themes are identified).`;
 }
 
-const RETRYABLE_STATUSES = new Set([429, 503]); // 429 = rate limit; 503 = free-tier "high demand" (observed in practice)
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function requestGemini(prompt) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error('GEMINI_API_KEY is not set');
-
-  const response = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': apiKey,
-    },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.5,
-        responseMimeType: 'application/json',
-        responseSchema: RESPONSE_SCHEMA,
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    const error = new Error(`Gemini API error ${response.status}: ${errText}`);
-    error.status = response.status;
-    throw error;
-  }
-
-  const data = await response.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('Gemini response missing expected text content');
-
-  return JSON.parse(text);
-}
-
-// Retries transient rate-limit/overload failures before surfacing a friendly error to the caller.
-async function callGemini(prompt) {
-  const delaysMs = [1000, 2500];
-
-  for (let attempt = 0; ; attempt++) {
-    try {
-      return await requestGemini(prompt);
-    } catch (err) {
-      const isRetryable = RETRYABLE_STATUSES.has(err.status);
-      if (!isRetryable || attempt >= delaysMs.length) throw err;
-      await sleep(delaysMs[attempt]);
-    }
-  }
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method_not_allowed' });
@@ -133,14 +76,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const result = await callGemini(buildPrompt(dreamText, tone));
+    const result = await callGemini(SYSTEM_PROMPT, buildPrompt(dreamText, tone), RESPONSE_SCHEMA);
     res.status(200).json(result);
   } catch (err) {
-    if (RETRYABLE_STATUSES.has(err.status)) {
-      res.status(429).json({
-        error: 'rate_limited',
-        message: 'Lots of dreams being interpreted right now — try again in a moment.',
-      });
+    if (isRateLimitError(err)) {
+      res.status(429).json(RATE_LIMIT_RESPONSE);
       return;
     }
     console.error('interpret.js generation failure:', err);
