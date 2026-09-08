@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import EntryScreen from './components/screens/EntryScreen'
 import ConstellationScreen from './components/screens/ConstellationScreen'
@@ -57,6 +57,13 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null)
   const [retryAction, setRetryAction] = useState(null)
 
+  // Guards synthesis recomputation against rapid repeat toggles: the visual selection/lines update
+  // instantly on every tap, but the network call itself is debounced to the final selection, and a
+  // stale (superseded) response can never overwrite a newer one that already landed.
+  const latestSelectionRef = useRef(selectedLenses)
+  const synthesisRequestIdRef = useRef(0)
+  const synthesisDebounceRef = useRef(null)
+
   // Sync app view state with browser history so the back button (in-app or browser) works
   useEffect(() => {
     window.history.replaceState({ view: 'entry' }, '')
@@ -101,9 +108,14 @@ function App() {
   }
 
   // Recomputes the synthesis section for a lens selection. All 3 lenses reuse the cached Tier 1
-  // synthesis (no network call); 1-2 lenses call the lighter Tier 2 synthesis endpoint.
-  async function recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3) {
+  // synthesis (no network call); 1-2 lenses call the lighter Tier 2 synthesis endpoint. `requestId`
+  // lets a caller discard this result if a newer request has since superseded it (see stale-response
+  // guard below) — pass the value returned by `beginSynthesisRequest()`.
+  async function recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3, requestId) {
+    const isStale = () => requestId !== undefined && requestId !== synthesisRequestIdRef.current
+
     if (lenses.length === 3) {
+      if (isStale()) return
       setSynthesis(cachedAll3)
       setDataVersion((v) => v + 1)
       setLoadingState('idle')
@@ -118,13 +130,15 @@ function App() {
         selectedLensTexts[id] = lensTexts[id]
       })
       const result = await synthesizeLenses({ selectedLensTexts, tone: toneValue, lensCount: lenses.length })
+      if (isStale()) return
       setSynthesis(result)
       setDataVersion((v) => v + 1)
       setLoadingState('idle')
     } catch (err) {
+      if (isStale()) return
       setErrorMessage(err.message)
       setLoadingState('error')
-      setRetryAction(() => () => recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3))
+      setRetryAction(() => () => recomputeSynthesis(lenses, lensTexts, toneValue, cachedAll3, requestId))
       throw err
     }
   }
@@ -146,21 +160,30 @@ function App() {
     setSelectedLenses((current) => computeNextSelection(current, lensId))
   }
 
-  // Results-screen toggling: selection change triggers a Tier 2-only recomputation immediately.
-  async function handleToggleLensInResults(lensId) {
-    const next = computeNextSelection(selectedLenses, lensId)
-    if (next === selectedLenses) return
-    setSelectedLenses(next)
-    try {
-      await recomputeSynthesis(next, generatedLenses, tone, synthesisAll3)
-    } catch {
-      // Error UI is already shown; retry recomputes the same selection.
-    }
+  // Results-screen toggling: selection (and its lines/card styling) updates immediately on every tap.
+  // The actual recomputation network call is debounced to the final selection after a brief pause,
+  // so a burst of rapid taps only fires one request instead of one per tap.
+  function handleToggleLensInResults(lensId) {
+    setSelectedLenses((current) => {
+      const next = computeNextSelection(current, lensId)
+      latestSelectionRef.current = next
+      return next
+    })
+
+    if (synthesisDebounceRef.current) clearTimeout(synthesisDebounceRef.current)
+    const requestId = ++synthesisRequestIdRef.current
+    synthesisDebounceRef.current = setTimeout(() => {
+      recomputeSynthesis(latestSelectionRef.current, generatedLenses, tone, synthesisAll3, requestId).catch(() => {
+        // Error UI is already shown; retry recomputes the same selection.
+      })
+    }, 350)
   }
 
   async function handleReveal() {
+    if (synthesisDebounceRef.current) clearTimeout(synthesisDebounceRef.current)
+    const requestId = ++synthesisRequestIdRef.current
     try {
-      await recomputeSynthesis(selectedLenses, generatedLenses, tone, synthesisAll3)
+      await recomputeSynthesis(selectedLenses, generatedLenses, tone, synthesisAll3, requestId)
       setRevealCount((count) => count + 1)
       navigateTo('results')
     } catch {
@@ -171,9 +194,11 @@ function App() {
   async function handleToneChange(nextTone) {
     setTone(nextTone)
     if (!generatedLenses) return
+    if (synthesisDebounceRef.current) clearTimeout(synthesisDebounceRef.current)
+    const requestId = ++synthesisRequestIdRef.current
     try {
       const { lenses, synthesisAll3: freshAll3 } = await generateInterpretation(nextTone)
-      await recomputeSynthesis(selectedLenses, lenses, nextTone, freshAll3)
+      await recomputeSynthesis(selectedLenses, lenses, nextTone, freshAll3, requestId)
     } catch {
       // Error UI is already shown.
     }

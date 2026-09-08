@@ -112,3 +112,27 @@ body {
 p {
   margin: 0;
 }
+
+/* Thin, subtle, rounded scrollbar for capped-height lens cards — invisible until hovered */
+.lens-scroll {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+.lens-scroll:hover {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gem-opal-300) transparent;
+}
+.lens-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.lens-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.lens-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+.lens-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--color-gem-opal-300);
+}
+

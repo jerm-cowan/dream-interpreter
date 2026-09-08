@@ -13,17 +13,20 @@ export const LENS_STYLES = {
     unselected: 'border-gem-amethyst-200 border-dashed bg-gem-amethyst-50/25 text-gem-amethyst-200',
     icon: 'text-gem-amethyst-500',
     unselectedIcon: 'text-gem-amethyst-200',
+    ring: 'ring-gem-amethyst-300',
   },
   neuroscience: {
     selected: 'border-gem-sapphire-300 bg-gem-sapphire-50/50 text-gem-sapphire-700',
     unselected: 'border-gem-sapphire-200 border-dashed bg-gem-sapphire-50/25 text-gem-sapphire-200',
     icon: 'text-gem-sapphire-500',
     unselectedIcon: 'text-gem-sapphire-200',
+    ring: 'ring-gem-sapphire-300',
   },
   symbolism: {
     selected: 'border-gem-emerald-300 bg-gem-emerald-50/50 text-gem-emerald-700',
     unselected: 'border-gem-emerald-200 border-dashed bg-gem-emerald-50/25 text-gem-emerald-200',
     icon: 'text-gem-emerald-500',
     unselectedIcon: 'text-gem-emerald-200',
+    ring: 'ring-gem-emerald-300',
   },
 }

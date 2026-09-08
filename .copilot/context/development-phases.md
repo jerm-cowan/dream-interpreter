@@ -44,12 +44,13 @@ Aim for **multiple commits per phase**, not one commit per phase.
 - Test all three lens-count scenarios (1, 2, 3 selected).
 - Commit: `feat: add synthesis recomputation serverless function`.
 
-## Phase 8 — Wire Frontend to Both Generation Tiers
+## Phase 8 — Wire Frontend to Both Generation Tiers ✅ (done — expanded beyond original scope)
 - Connect the Entry submission and tone-control changes to `api/interpret.js`.
 - Connect lens-selection changes to `api/synthesize.js`.
 - Build the "reimagining..." transition for tone changes, and a lighter transition for lens-selection changes.
 - Build the graceful rate-limit error state in the UI.
 - Commit: `feat: connect UI to generation endpoints, add loading and error states`.
+- **Beyond the original scope:** the Results screen was substantially reworked after this phase — a responsive row + downward-lines layout at wide breakpoints (fixed-height, scrollable lens cards; multi-column synthesis with a vertical divider) versus a per-card accordion (independent select/expand state, no icons) on mobile/tablet-portrait; a hover affordance on lens cards; lens-toggle selection/lines now update instantly on tap, with the actual `api/synthesize` call debounced and guarded against stale/out-of-order responses, and a "Generating new responses..." status replacing the toggle-instruction copy while that debounced call is in flight. See `information-architecture.md` and `visual-design-direction.md` for details.
 
 ## Phase 9 — Copy-to-Clipboard & Polish
 - Implement copy-current-view-to-clipboard.

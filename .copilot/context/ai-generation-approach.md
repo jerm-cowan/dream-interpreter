@@ -78,6 +78,9 @@ Output (structured JSON), shape depends on `lensCount`:
 
 This keeps lens-selection changes fast and cheap — it's a small request using text that's already been generated, not a full re-interpretation of the dream.
 
+### Client-side debounce (frontend robustness, not a generation-tier change)
+Rapid repeated lens-selection toggles don't each fire their own Tier 2 request — the frontend updates the visual selection and connecting lines immediately, but debounces the actual `api/synthesize` call to the final selection after a brief pause, and discards any in-flight response that's since been superseded by a newer request (e.g., a fast follow-up toggle or a tone change). This cuts down on redundant Gemini calls without adding perceived lag, since the UI never waits on the network to reflect a toggle.
+
 ## Rate-limit handling (required for MVP)
 
 Both `api/interpret.js` and `api/synthesize.js` must handle `429` (rate-limit exceeded) responses from Gemini gracefully:

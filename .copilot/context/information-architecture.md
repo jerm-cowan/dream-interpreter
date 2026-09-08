@@ -23,12 +23,13 @@ This is a **single-page app with multiple in-app view states** (no router, no pa
 - A "reveal" trigger (button or gesture) advances to Results once the user is happy with their lens selection.
 
 ### 3. Results (Reveal + Synthesis)
-- Animated connecting lines from the center image to each selected lens.
-- Revealed lens content for whichever lens(es) are selected.
+- **Wide breakpoints (tablet-landscape and up):** the three lens cards sit side-by-side in a row (fixed, matching height with a hover-revealed scrollbar if content overflows), each toggled by its icon+label header. Connecting lines draw downward from each selected card to a single convergence point at the top of the synthesis container below — the two outer lenses step down/across/down, the middle lens drops straight.
+- **Mobile/tablet-portrait:** lens cards stack vertically as an accordion — each card has two fully independent states: selected/deselected (checkbox) and expanded/collapsed (caret). Collapsing a card only hides its body text; it never affects whether that lens counts toward the synthesis, and vice versa. All cards (and the synthesis container) start expanded on arrival at Results, regardless of selection carried over from Constellation.
 - Synthesis section, shaped according to selection count (see `mvp-features.md` #6):
   - 3 lenses → full Common Themes / Divergent Interpretations / Reflection Questions.
   - 2 lenses → Common Themes / Divergent Interpretations narrowed to the pair, + Reflection Questions.
   - 1 lens → focused single-lens reflection framing + Reflection Questions.
+  - At wide breakpoints these render as side-by-side columns with a vertical divider; on mobile/tablet-portrait they stack with a horizontal divider, and the whole container is also a caret-only accordion (no selection checkbox — it's a computed result, not a selectable input).
 - Copy-results action.
 - Start-over action (returns to Entry, clearing dream text but not necessarily tone preference).
 
@@ -42,7 +43,7 @@ This is a **single-page app with multiple in-app view states** (no router, no pa
 1. **Entry → Constellation transition:** brief animated reveal, not a blank flash.
 2. **Constellation → Results (initial reveal):** the signature line-drawing + content-reveal animation.
 3. **Tone change while in Results:** a "reimagining..." transition, distinct from the initial reveal, communicating that fresh content is being generated.
-4. **Lens selection change while in Results:** a lighter, faster transition (redrawing connecting lines, recomputing synthesis) — should feel snappier than a full tone-driven regeneration, since it's a smaller request.
+4. **Lens selection change while in Results:** the card's selected state and its connecting line update **instantly** on tap, independent of the network. The actual `api/synthesize` call is debounced (fires once a brief beat after the user stops toggling) so a burst of rapid taps doesn't queue up redundant requests, and a slow/superseded response can never overwrite a newer one. While that debounced call is in flight, the toggle-instruction copy below the tone control is replaced by a "Generating new responses..." status with a small spinning icon, reverting once the synthesis lands.
 5. **Rate-limited/error state:** a friendly, on-brand message with a retry action — can occur during any of the above transitions if the LLM call fails.
 
 ## Why still no navigation/router

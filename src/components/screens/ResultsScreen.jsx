@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import { Copy, RotateCcw, Brain } from 'lucide-react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { Copy, RotateCcw, Brain, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 import { motion } from 'motion/react'
 import ToneControl from '../ToneControl'
 import InterpretationCard from '../InterpretationCard'
@@ -23,7 +23,23 @@ function ResultsScreen({
   const isSingleLens = selectedLenses.length === 1
   const isGenerating = loadingState === 'generating'
   const isSynthesizing = loadingState === 'synthesizing'
-  const isBusy = isGenerating || isSynthesizing
+
+  // Mobile/tablet-portrait accordion state only — fully independent of lens selection, and of each
+  // other's collapse state. Always starts fully expanded on arrival at Results (fresh mount per visit).
+  const [expandedLenses, setExpandedLenses] = useState(() => new Set(LENSES.map((lens) => lens.id)))
+  const [synthesisExpanded, setSynthesisExpanded] = useState(true)
+
+  function toggleExpanded(lensId) {
+    setExpandedLenses((current) => {
+      const next = new Set(current)
+      if (next.has(lensId)) {
+        next.delete(lensId)
+      } else {
+        next.add(lensId)
+      }
+      return next
+    })
+  }
 
   // Measured (not percentage) geometry, since card/synthesis heights aren't fixed like the Constellation triangle
   const gridRef = useRef(null)
@@ -31,38 +47,60 @@ function ResultsScreen({
   const synthesisRef = useRef(null)
   const [lineGeometry, setLineGeometry] = useState(null)
 
-  useLayoutEffect(() => {
-    function measure() {
-      const container = gridRef.current
-      const synthesis = synthesisRef.current
-      if (!container || !synthesis) return
+  // Stable so it can be re-run both on mount/resize and once the entrance animation actually settles
+  const measureLines = useCallback(() => {
+    const container = gridRef.current
+    const synthesisEl = synthesisRef.current
+    if (!container || !synthesisEl) return
 
-      const containerRect = container.getBoundingClientRect()
-      const synthesisRect = synthesis.getBoundingClientRect()
-      // Every line converges on this single point: the synthesis box's left edge, vertically centered
-      const target = {
-        x: synthesisRect.left - containerRect.left,
-        y: synthesisRect.top - containerRect.top + synthesisRect.height / 2,
-      }
-
-      const sources = {}
-      LENSES.forEach((lens) => {
-        const node = cardRefs.current[lens.id]
-        if (!node) return
-        const rect = node.getBoundingClientRect()
-        sources[lens.id] = {
-          x: rect.right - containerRect.left,
-          y: rect.top - containerRect.top + rect.height / 2,
-        }
-      })
-
-      setLineGeometry({ width: containerRect.width, height: containerRect.height, target, sources })
+    const containerRect = container.getBoundingClientRect()
+    const synthesisRect = synthesisEl.getBoundingClientRect()
+    // Every line converges on this single point: the synthesis box's top edge, horizontally centered
+    const target = {
+      x: synthesisRect.left - containerRect.left + synthesisRect.width / 2,
+      y: synthesisRect.top - containerRect.top,
     }
 
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
+    const sources = {}
+    LENSES.forEach((lens) => {
+      const node = cardRefs.current[lens.id]
+      if (!node) return
+      const rect = node.getBoundingClientRect()
+      // Lines start at each card's own bottom edge, horizontally centered, and draw downward
+      sources[lens.id] = {
+        x: rect.left - containerRect.left + rect.width / 2,
+        y: rect.bottom - containerRect.top,
+      }
+    })
+
+    setLineGeometry({ width: containerRect.width, height: containerRect.height, target, sources })
   }, [])
+
+  useLayoutEffect(() => {
+    // Cards/synthesis enter via a y-offset animation, so a single measurement taken at mount would
+    // go stale mid-transition (and briefly show lines short of the frame borders below). Re-measuring
+    // on every frame for the duration of that entrance animation keeps lines glued to it throughout,
+    // not just once it settles.
+    let rafId
+    let active = true
+    const entranceMs = fast ? 600 : 1050
+    const stopAt = performance.now() + entranceMs
+
+    function tick(now) {
+      measureLines()
+      if (active && now < stopAt) {
+        rafId = requestAnimationFrame(tick)
+      }
+    }
+
+    rafId = requestAnimationFrame(tick)
+    window.addEventListener('resize', measureLines)
+    return () => {
+      active = false
+      cancelAnimationFrame(rafId)
+      window.removeEventListener('resize', measureLines)
+    }
+  }, [dataVersion, measureLines, fast])
 
   // First reveal gets the full signature stagger; a re-reveal after a lens-selection change is snappier
   const cardContainerVariants = {
@@ -105,12 +143,22 @@ function ResultsScreen({
           Your Reflection
         </h2>
         <ToneControl value={tone} onChange={onToneChange} disabled={isGenerating} />
-        {isGenerating && (
+        {isGenerating ? (
           <p className="text-sm text-gem-obsidian-500/80 italic">Reimagining your dream in a new voice...</p>
+        ) : isSynthesizing ? (
+          <p className="flex items-center gap-2 text-sm text-gem-obsidian-500/80 italic">
+            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+            Generating new responses...
+          </p>
+        ) : (
+          <p className="text-sm text-gem-obsidian-500/80 text-center">
+            Here are possible meanings across three lenses — turn any of them on or off to explore different
+            combinations.
+          </p>
         )}
       </header>
 
-      <div ref={gridRef} className="relative w-full max-w-3xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:items-center">
+      <div ref={gridRef} className="relative w-full max-w-5xl mx-auto flex flex-col gap-10 lg:gap-14">
         {lineGeometry && (
           <svg
             className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none"
@@ -122,23 +170,34 @@ function ResultsScreen({
               const source = lineGeometry.sources[lens.id]
               if (!source) return null
               const selected = selectedLenses.includes(lens.id)
+              const target = lineGeometry.target
+              const lineProps = {
+                strokeWidth: '1.5',
+                strokeLinecap: 'round',
+                strokeLinejoin: 'round',
+                className: LENS_STROKE[lens.id],
+                initial: { pathLength: 0, opacity: 0 },
+                animate: selected ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 },
+                transition: {
+                  duration: lineDuration,
+                  delay: selected ? index * lineStagger : 0,
+                  ease: 'easeInOut',
+                },
+              }
+
+              // The middle lens sits directly above the synthesis box, so it gets a plain
+              // straight drop; the two side lenses step down/across/down to reach the same point.
+              if (lens.id === 'neuroscience') {
+                return <motion.line key={lens.id} x1={source.x} y1={source.y} x2={target.x} y2={target.y} {...lineProps} />
+              }
+
+              const bendY = source.y + (target.y - source.y) / 2
               return (
-                <motion.line
+                <motion.path
                   key={lens.id}
-                  x1={source.x}
-                  y1={source.y}
-                  x2={lineGeometry.target.x}
-                  y2={lineGeometry.target.y}
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  className={LENS_STROKE[lens.id]}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={selected ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-                  transition={{
-                    duration: lineDuration,
-                    delay: selected ? index * lineStagger : 0,
-                    ease: 'easeInOut',
-                  }}
+                  fill="none"
+                  d={`M ${source.x} ${source.y} L ${source.x} ${bendY} L ${target.x} ${bendY} L ${target.x} ${target.y}`}
+                  {...lineProps}
                 />
               )
             })}
@@ -147,7 +206,7 @@ function ResultsScreen({
 
         <motion.section
           key={`cards-${dataVersion}`}
-          className={`flex flex-col gap-8 transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
+          className={`flex flex-col gap-6 lg:grid lg:grid-cols-3 lg:gap-8 lg:items-start transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
           variants={cardContainerVariants}
           initial="hidden"
           animate="visible"
@@ -165,7 +224,9 @@ function ResultsScreen({
                 lens={lens.label}
                 body={generatedLenses?.[lens.id] ?? ''}
                 selected={selectedLenses.includes(lens.id)}
-                onToggle={() => !isBusy && onToggleLens(lens.id)}
+                onToggle={() => onToggleLens(lens.id)}
+                expanded={expandedLenses.has(lens.id)}
+                onToggleExpand={() => toggleExpanded(lens.id)}
               />
             </motion.div>
           ))}
@@ -174,24 +235,37 @@ function ResultsScreen({
         <motion.section
           key={`synthesis-${dataVersion}`}
           ref={synthesisRef}
-          className={`rounded-xl border border-gem-citrine-200 bg-gem-citrine-50/50 p-5 flex flex-col items-center justify-center gap-6 transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
+          className={`rounded-xl border border-gem-citrine-200 bg-gem-citrine-50/50 p-5 flex flex-col gap-6 w-full lg:w-fit lg:max-w-4xl lg:self-center transition-opacity ${isSynthesizing ? 'opacity-60' : ''}`}
           variants={synthesisVariants}
           initial="hidden"
           animate="visible"
         >
-          {isSingleLens ? (
-            <SynthesisSection
-              heading="Single-Lens Reflection"
-              body={synthesis?.singleLensReflection ?? ''}
-              divider={false}
-            />
-          ) : (
-            <>
-              <SynthesisSection heading="Common Themes" body={synthesis?.commonThemes ?? ''} divider={false} />
-              <SynthesisSection heading="Divergent Interpretations" body={synthesis?.divergentInterpretations ?? ''} />
-            </>
-          )}
-          <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
+          <div className="flex lg:hidden items-center justify-between gap-2">
+            <span className="font-display font-semibold text-lg text-gem-citrine-900">Synthesis</span>
+            <button
+              type="button"
+              onClick={() => setSynthesisExpanded((value) => !value)}
+              aria-expanded={synthesisExpanded}
+              aria-label={synthesisExpanded ? 'Collapse synthesis' : 'Expand synthesis'}
+              className="p-1 -m-1 shrink-0 text-gem-citrine-900"
+            >
+              {synthesisExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
+          </div>
+
+          <div
+            className={`${synthesisExpanded ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row lg:items-stretch divide-y divide-gem-citrine-200 lg:divide-y-0 lg:divide-x gap-6 lg:gap-0 w-full`}
+          >
+            {isSingleLens ? (
+              <SynthesisSection heading="Single-Lens Reflection" body={synthesis?.singleLensReflection ?? ''} />
+            ) : (
+              <>
+                <SynthesisSection heading="Common Themes" body={synthesis?.commonThemes ?? ''} />
+                <SynthesisSection heading="Divergent Interpretations" body={synthesis?.divergentInterpretations ?? ''} />
+              </>
+            )}
+            <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
+          </div>
         </motion.section>
       </div>
 
