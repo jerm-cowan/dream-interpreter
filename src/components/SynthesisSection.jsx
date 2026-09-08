@@ -2,7 +2,7 @@
 // stack, border-left on wide-screen columns) rather than a self-managed divider here.
 function SynthesisSection({ heading, body, items }) {
   return (
-    <div className="flex flex-col gap-2 lg:flex-1 lg:px-6 lg:first:pl-0 lg:last:pr-0">
+    <div className="flex flex-col gap-2 py-5 first:pt-0 last:pb-0 lg:py-0 lg:flex-1 lg:px-6 lg:first:pl-0 lg:last:pr-0">
       <h3 className="font-display font-semibold text-lg text-gem-citrine-900">{heading}</h3>
       {items ? (
         <ul className="flex flex-col gap-2 list-disc list-inside">

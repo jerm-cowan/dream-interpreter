@@ -256,7 +256,7 @@ function ResultsScreen({
           </div>
 
           <div
-            className={`${synthesisExpanded ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row lg:items-stretch divide-y divide-gem-citrine-200 lg:divide-y-0 lg:divide-x gap-6 lg:gap-0 w-full`}
+            className={`${synthesisExpanded ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row lg:items-stretch divide-y divide-gem-citrine-200 lg:divide-y-0 lg:divide-x w-full`}
           >
             {hasNoLensSelected ? (
               <p className="w-full py-2 text-base leading-relaxed text-gem-obsidian-500/70 italic text-center">
