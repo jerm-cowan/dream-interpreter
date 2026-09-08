@@ -77,14 +77,19 @@ function ConstellationScreen({
         })}
       </div>
 
-      <button
-        type="button"
-        onClick={onReveal}
-        disabled={!hasSelection || isBusy}
-        className="w-full max-w-xs min-h-12 rounded-lg bg-gem-amethyst-600 text-white font-semibold text-base py-3 hover:bg-gem-amethyst-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {isSynthesizing ? 'Consulting the lenses...' : 'Reveal'}
-      </button>
+      <div className="w-full max-w-xs flex flex-col items-center gap-2">
+        <button
+          type="button"
+          onClick={onReveal}
+          disabled={!hasSelection || isBusy}
+          className="w-full min-h-12 rounded-lg bg-gem-amethyst-600 text-white font-semibold text-base py-3 hover:bg-gem-amethyst-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {isSynthesizing ? 'Consulting the lenses...' : 'Reveal'}
+        </button>
+        {!hasSelection && (
+          <p className="text-sm text-gem-obsidian-500/70 text-center">Select at least one lens to reveal a reflection.</p>
+        )}
+      </div>
     </div>
   )
 }

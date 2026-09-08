@@ -1,9 +1,10 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { Copy, RotateCcw, Brain, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
+import { RotateCcw, Brain, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 import { motion } from 'motion/react'
 import ToneControl from '../ToneControl'
 import InterpretationCard from '../InterpretationCard'
 import SynthesisSection from '../SynthesisSection'
+import CopyResultsButton from '../CopyResultsButton'
 import BackButton from '../BackButton'
 import { LENS_STROKE, REVEAL_LINE_TIMING } from '../ConnectingLines'
 import { LENSES } from '../../lensData'
@@ -21,6 +22,7 @@ function ResultsScreen({
   dataVersion = 0,
 }) {
   const isSingleLens = selectedLenses.length === 1
+  const hasNoLensSelected = selectedLenses.length === 0
   const isGenerating = loadingState === 'generating'
   const isSynthesizing = loadingState === 'synthesizing'
 
@@ -256,27 +258,28 @@ function ResultsScreen({
           <div
             className={`${synthesisExpanded ? 'flex' : 'hidden'} lg:flex flex-col lg:flex-row lg:items-stretch divide-y divide-gem-citrine-200 lg:divide-y-0 lg:divide-x gap-6 lg:gap-0 w-full`}
           >
-            {isSingleLens ? (
-              <SynthesisSection heading="Single-Lens Reflection" body={synthesis?.singleLensReflection ?? ''} />
+            {hasNoLensSelected ? (
+              <p className="w-full py-2 text-base leading-relaxed text-gem-obsidian-500/70 italic text-center">
+                Select at least one lens above to see a reflection here.
+              </p>
+            ) : isSingleLens ? (
+              <>
+                <SynthesisSection heading="Single-Lens Reflection" body={synthesis?.singleLensReflection ?? ''} />
+                <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
+              </>
             ) : (
               <>
                 <SynthesisSection heading="Common Themes" body={synthesis?.commonThemes ?? ''} />
                 <SynthesisSection heading="Divergent Interpretations" body={synthesis?.divergentInterpretations ?? ''} />
+                <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
               </>
             )}
-            <SynthesisSection heading="Reflection Questions" items={synthesis?.reflectionQuestions ?? []} />
           </div>
         </motion.section>
       </div>
 
       <div className="flex items-center justify-center gap-4 pb-4">
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gem-obsidian-500 hover:text-gem-obsidian-700 transition-colors"
-        >
-          <Copy className="w-4 h-4" />
-          Copy Results
-        </button>
+        <CopyResultsButton tone={tone} selectedLenses={selectedLenses} generatedLenses={generatedLenses} synthesis={synthesis} />
         <span className="h-4 w-px bg-gem-opal-300" aria-hidden="true" />
         <button
           type="button"

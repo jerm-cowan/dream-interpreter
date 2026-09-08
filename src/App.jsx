@@ -10,8 +10,8 @@ const ALL_LENS_IDS = ['psychology', 'neuroscience', 'symbolism']
 
 function computeNextSelection(current, lensId) {
   if (current.includes(lensId)) {
-    // Always keep at least one lens selected
-    if (current.length === 1) return current
+    // Zero is a valid (if inert) selection state — callers are responsible for disabling
+    // actions that need at least one lens (Reveal button, synthesis network calls, copy).
     return current.filter((id) => id !== lensId)
   }
   return [...current, lensId]
@@ -84,7 +84,10 @@ function App() {
   }
 
   // Tier 1: full generation for a given tone. Used for both the initial submit and tone changes.
-  async function generateInterpretation(toneValue) {
+  // `requestId` (when passed, e.g. from a tone change) lets a caller discard this response — and
+  // skip touching shared state/error UI — if a newer request has since superseded it (see the
+  // rapid-tone-toggle guard in `handleToneChange`).
+  async function generateInterpretation(toneValue, requestId) {
     setLoadingState('generating')
     setErrorMessage(null)
     try {
@@ -94,15 +97,20 @@ function App() {
         neuroscience: result.neuroscience,
         symbolism: result.symbolism,
       }
-      setGeneratedLenses(lenses)
-      setSynthesisAll3(result.synthesis_all3)
-      setDataVersion((v) => v + 1)
-      setLoadingState('idle')
+      const isStale = requestId !== undefined && requestId !== synthesisRequestIdRef.current
+      if (!isStale) {
+        setGeneratedLenses(lenses)
+        setSynthesisAll3(result.synthesis_all3)
+        setDataVersion((v) => v + 1)
+        setLoadingState('idle')
+      }
       return { lenses, synthesisAll3: result.synthesis_all3 }
     } catch (err) {
+      const isStale = requestId !== undefined && requestId !== synthesisRequestIdRef.current
+      if (isStale) throw err
       setErrorMessage(err.message)
       setLoadingState('error')
-      setRetryAction(() => () => generateInterpretation(toneValue))
+      setRetryAction(() => () => generateInterpretation(toneValue, requestId))
       throw err
     }
   }
@@ -173,6 +181,9 @@ function App() {
     if (synthesisDebounceRef.current) clearTimeout(synthesisDebounceRef.current)
     const requestId = ++synthesisRequestIdRef.current
     synthesisDebounceRef.current = setTimeout(() => {
+      // Zero lenses selected: nothing to synthesize — skip the network call entirely (the API
+      // itself would 400 on an empty selection); ResultsScreen renders a placeholder instead.
+      if (latestSelectionRef.current.length === 0) return
       recomputeSynthesis(latestSelectionRef.current, generatedLenses, tone, synthesisAll3, requestId).catch(() => {
         // Error UI is already shown; retry recomputes the same selection.
       })
@@ -197,10 +208,11 @@ function App() {
     if (synthesisDebounceRef.current) clearTimeout(synthesisDebounceRef.current)
     const requestId = ++synthesisRequestIdRef.current
     try {
-      const { lenses, synthesisAll3: freshAll3 } = await generateInterpretation(nextTone)
-      await recomputeSynthesis(selectedLenses, lenses, nextTone, freshAll3, requestId)
+      const { lenses, synthesisAll3: freshAll3 } = await generateInterpretation(nextTone, requestId)
+      if (latestSelectionRef.current.length === 0) return
+      await recomputeSynthesis(latestSelectionRef.current, lenses, nextTone, freshAll3, requestId)
     } catch {
-      // Error UI is already shown.
+      // Error UI is already shown (unless a newer tone/lens change has since superseded this one).
     }
   }
 
