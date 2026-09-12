@@ -160,7 +160,9 @@ function ResultsScreen({
         )}
       </header>
 
-      <div ref={gridRef} className="relative w-full max-w-5xl mx-auto flex flex-col gap-10 lg:gap-14">
+      {/* Below lg, gap here matches the lens cards' own gap-6 so every accordion (3 lens cards +
+          synthesis) sits at the same vertical spacing; lg+ uses the wider row layout's own gap-14 */}
+      <div ref={gridRef} className="relative w-full max-w-5xl mx-auto flex flex-col gap-6 lg:gap-14">
         {lineGeometry && (
           <svg
             className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none"
