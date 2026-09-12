@@ -108,7 +108,7 @@ Gemini's free tier has real per-minute and per-day request caps. The serverless 
 
 ### Deployment & access control
 - **Deployment:** Vercel Hobby (free) plan, per Protogen convention.
-- **Access control: Vercel Authentication with a Shareable Link** — not a manually distributed password. The deployment stays gated behind Vercel's built-in authentication; a Shareable Link (generated from the Vercel dashboard) is what gets included in the case study submission, giving reviewers (and, if desired, a wider Slalom/Protoverse audience) direct access without any manual password exchange or repo-access request.
+- **Access control: a plain, intentionally public Vercel URL** — not gated behind Vercel Authentication or a password. `dream-interpreter-blue.vercel.app` is a deliberately public alias, chosen so reviewers (and, if desired, a wider Slalom/Protoverse audience) get direct access with zero friction — no login, no shareable-link token, no manual password exchange. The Gemini API key backing it has no billing account attached on the Google Cloud side, so there's no cost exposure regardless of traffic volume.
 - No client- or Slalom-specific information is included anywhere in the build, per Protogen guidance. The Gemini API key is personal, not a Slalom-billed resource.
 
 > **A note on deviating from Protogen 200's taught stack (Vue):** Protogen 200 teaches Vue. This project deliberately uses React instead — a documented, conscious choice — to prioritize a richer, more delightful animated experience. The underlying skill being demonstrated (planning a build, working with a component-based framework, managing an AI-assisted workflow) transfers regardless of framework.
