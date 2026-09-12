@@ -1,8 +1,8 @@
 function DreamInput({ value, onChange }) {
   return (
     <div className="flex flex-col gap-3 w-full">
-      <label htmlFor="dream-input" className="font-medium text-base text-gem-obsidian-700">
-        Describe your dream
+      <label htmlFor="dream-input" className="sr-only">
+        Describe a dream you have had
       </label>
       <textarea
         id="dream-input"

@@ -8,11 +8,13 @@ export const REVEAL_LINE_TIMING = {
 }
 
 // Endpoints mirror the static triangle geometry drawn in ConstellationScreen (percentage
-// coordinates in a non-uniformly-scaled viewBox, so they track the responsive container)
+// coordinates in a non-uniformly-scaled viewBox, so they track the responsive container).
+// The bottom two overshoot their corner so the extra length hides under the card on top,
+// leaving a flush join at its rounded edge (same trick as the brain circle).
 const DESKTOP_LINE_ENDPOINTS = {
-  psychology: { x1: 50, y1: 54.9, x2: 50, y2: 30.4 },
-  neuroscience: { x1: 50, y1: 54.9, x2: 30.4, y2: 69.6 },
-  symbolism: { x1: 50, y1: 54.9, x2: 69.6, y2: 69.6 },
+  psychology: { x1: 50, y1: 55, x2: 50, y2: 30 },
+  neuroscience: { x1: 50, y1: 55, x2: 27, y2: 72.25 },
+  symbolism: { x1: 50, y1: 55, x2: 73, y2: 72.25 },
 }
 
 const LENS_STROKE = {
@@ -30,7 +32,7 @@ function ConnectingLines({ selectedLenses, fast = false }) {
 
   return (
     <svg
-      className="hidden md:block absolute inset-0 w-full h-full pointer-events-none"
+      className="absolute inset-0 w-full h-full pointer-events-none"
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
       aria-hidden="true"
