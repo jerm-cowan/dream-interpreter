@@ -17,7 +17,7 @@ This is a **single-page app with multiple in-app view states** (no router, no pa
 - No tone control or lens selection visible yet — those belong to the Constellation screen onward.
 
 ### 2. Constellation
-- Central symbolic image + three lenses arranged around it (triangular on tablet/desktop, stacked on mobile).
+- Central symbolic image + three lenses arranged around it in the same triangular layout at every breakpoint, scaling down (smaller center icon, condensed cards, tighter connecting lines) rather than reflowing into a stacked list on mobile — see `visual-design-direction.md` for the rationale.
 - Tone control (Reflective ↔ Playful) — visible from here onward, persists across all later states.
 - Lens selection UI (tap to include/exclude each of the 3 lenses) — defaults to all 3 selected.
 - A "reveal" trigger (button or gesture) advances to Results once the user is happy with their lens selection.

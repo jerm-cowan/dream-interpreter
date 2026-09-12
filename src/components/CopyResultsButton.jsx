@@ -28,6 +28,36 @@ export function buildResultsText({ tone, selectedLenses, generatedLenses, synthe
   return lines.join('\n').trim()
 }
 
+// navigator.clipboard requires a secure context (https, or localhost) — testing over a plain-http
+// LAN IP on a phone silently has no clipboard API at all, so fall back to the legacy
+// execCommand('copy') technique (still works over http, as long as it's from a user gesture).
+async function copyToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text)
+      return true
+    } catch {
+      // fall through to the legacy fallback below
+    }
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  document.body.appendChild(textarea)
+  textarea.focus()
+  textarea.select()
+  let success = false
+  try {
+    success = document.execCommand('copy')
+  } catch {
+    success = false
+  }
+  document.body.removeChild(textarea)
+  return success
+}
+
 function CopyResultsButton({ tone, selectedLenses, generatedLenses, synthesis }) {
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef(null)
@@ -38,11 +68,8 @@ function CopyResultsButton({ tone, selectedLenses, generatedLenses, synthesis })
   async function handleCopy() {
     if (disabled) return
     const text = buildResultsText({ tone, selectedLenses, generatedLenses, synthesis })
-    try {
-      await navigator.clipboard.writeText(text)
-    } catch {
-      return
-    }
+    const success = await copyToClipboard(text)
+    if (!success) return
     setCopied(true)
     clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => setCopied(false), 2000)

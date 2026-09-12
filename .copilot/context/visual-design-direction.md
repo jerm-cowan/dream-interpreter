@@ -30,9 +30,9 @@ Each lens color ships as a full scale (50/100/200/300/500/600/700/900) so select
 
 ## Layout: the Constellation screen
 
-**Tablet/desktop:** a triangular or radial arrangement — the center image in the middle, the three lens icons/cards positioned around it at roughly equal angles, with the connecting lines drawn between center and each lens.
+**All breakpoints:** the same triangular arrangement — the center image in the middle, the three lens icons/cards positioned around it at roughly equal angles, with the connecting lines drawn between center and each lens. The container is sized as a percentage of its own width (not stepped by breakpoint), so on mobile it condenses to a smaller center icon, more compact cards, and shorter connecting lines rather than reflowing into a vertical stack.
 
-**Mobile:** gracefully collapses to a vertical stack — the center image shrinks to a small anchor icon at the top (still present, still meaningful, just less spatially dominant), with the three lenses stacked below it in sequence. This is a deliberate **reflow**, not a forced shrink of the same triangular geometry onto a narrow screen.
+**Why not a stacked mobile layout:** the connecting-line reveal (see Motion & interaction below) is the screen's signature, delightful moment — it's what makes lens selection feel alive rather than like a form. A vertical stack would have no meaningful line to draw, losing that interaction entirely on mobile. Since the triangular geometry scales down cleanly to comfortable tap-target sizes without visual overlap, there's no layout reason to sacrifice the line-drawing interaction on smaller screens — so the same triangle is kept everywhere, just condensed.
 
 ## Iconography
 
@@ -63,8 +63,8 @@ Each lens color ships as a full scale (50/100/200/300/500/600/700/900) so select
 
 ## Mobile-first layout notes
 
-- The stacked mobile layout should still visually communicate "these three lenses relate to one center," even without the literal triangle — e.g., via the small anchor icon staying visible/sticky-ish near the top, or via connecting-line remnants pointing upward toward it.
-- Touch targets for lens selection (tapping to include/exclude a lens) must be comfortably thumb-sized, not tiny icons crammed together.
+- The Constellation screen's triangular layout (condensed, not stacked) already communicates "these three lenses relate to one center" on mobile via the literal connecting lines — see the rationale above.
+- Touch targets for lens selection (tapping to include/exclude a lens) must be comfortably thumb-sized (44px minimum), not tiny icons crammed together, even at the condensed mobile size.
 
 ## Results screen lens selection (implemented)
 
