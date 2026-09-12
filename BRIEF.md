@@ -27,12 +27,13 @@ Most dream interpretation tools give a single, confident-sounding explanation. *
 The experience is built as a **sequence of distinct screens/states** within one app (no page reloads, no router — Motion handles the transitions between states):
 
 1. **Entry screen** — a simple, single-purpose "describe your dream" moment, evocative of a search box: minimal, inviting, no distractions.
-2. **Constellation screen** — after submitting, the app transitions (with a delightful animated reveal) into a central symbolic image (representing the dreaming mind) with the three lenses arranged around it — a triangular/radial layout on tablet/desktop, gracefully collapsing to a vertical arrangement with the center image as a small anchor icon on mobile. The **tone control** (Reflective ↔ Playful — see Section 8) lives here and can be adjusted at any time, including after results are shown, triggering a real regeneration in the new voice.
+2. **Constellation screen** — after submitting, the app transitions (with a delightful animated reveal) into a central symbolic image (representing the dreaming mind) with the three lenses arranged around it — a triangular/radial layout, with the same arrangement scaling down fluidly at smaller sizes (smaller center icon, condensed cards, shorter connecting lines) rather than reflowing to a vertical stack on mobile, so the signature line-drawing reveal is never lost. The **tone control** (Reflective ↔ Playful — see Section 8) lives here and can be adjusted at any time, including after results are shown, triggering a real regeneration in the new voice.
 3. **Reveal interaction** — the user selects which lens(es) to focus on (1, 2, or all 3) and a button/gesture reveals that lens's (or those lenses') content with animated connecting lines (drawn via Motion's SVG path animation) linking the center image to the selected lens(es).
 4. **Synthesis, scoped to selection** — Common Themes, Divergent Interpretations, and Reflection Questions are computed **based on whichever lens(es) are currently selected**:
    - **3 lenses selected:** full three-way comparison (as originally scoped).
    - **2 lenses selected:** synthesis narrows to just those two.
    - **1 lens selected:** "Common Themes" and "Divergent Interpretations" don't apply (nothing to compare) — this state instead shows a focused single-lens reflection framing, still ending in Reflection Questions.
+   - On mobile/tablet-portrait, lens cards and the synthesis panel present as an accordion — selection (which lenses count toward synthesis) and expansion (whether a card's body text is visible) are independent controls; on wider layouts they display side-by-side with connecting lines drawn down to the synthesis panel.
 5. User can copy the current view's results, adjust the tone control (triggering fresh regeneration), change lens selection at any time, or start over with a new dream.
 
 ## 5. Product Principles (non-negotiable)
@@ -48,14 +49,14 @@ The experience is built as a **sequence of distinct screens/states** within one 
 
 **Include:**
 - Entry screen: single dream text input
-- Constellation screen: central image + three lenses in a triangular (desktop/tablet) or stacked (mobile) layout
+- Constellation screen: central image + three lenses in a triangular layout that scales fluidly at every breakpoint (condensing on mobile rather than reflowing to a stack)
 - Tone control: **Reflective ↔ Playful** (two-state, not a continuous gradient — see Section 8), adjustable at any time, triggers real regeneration
 - Lens selection: user can choose 1, 2, or all 3 lenses to focus on
 - Animated line-drawing reveal connecting the center image to selected lens(es)
 - Synthesis that adapts to lens selection (Common Themes + Divergent Interpretations for 2-3 lenses; Reflection-only framing for 1 lens)
 - Reflection Questions in every state
 - Copy current results to clipboard
-- Responsive layout: triangular/radial on tablet+, gracefully collapsed to vertical on mobile
+- Responsive layout: the same triangular/radial arrangement scales fluidly at every breakpoint (condensing on mobile rather than reflowing to a vertical stack, to preserve the connecting-line reveal)
 - Graceful handling of LLM rate-limit errors (see Section 8) — a friendly in-app message, never a raw error or broken state
 
 **Explicitly out of scope for MVP:**
@@ -123,5 +124,5 @@ Gemini's free tier has real per-minute and per-day request caps. The serverless 
 - The tone control visibly changes voice and triggers a real, fresh regeneration — not just a cosmetic swap.
 - If the LLM is rate-limited, the user sees a graceful, on-brand message — never a raw error or broken UI.
 - Copy-to-clipboard captures the current view's results in a clean, shareable text format.
-- The deployed site is reachable via a Vercel Shareable Link, with no manual password to distribute.
+- The deployed site is reachable via a plain, public Vercel URL, with no login or shareable-link token required.
 - The build is a component-based React app, with the framework deviation from Protogen 200 documented above.

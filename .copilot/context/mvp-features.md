@@ -47,7 +47,7 @@ These are the features required for the build to satisfy the Protogen case study
 
 ## Definition of done for MVP
 
-A reviewer (or Jeremy, testing cold, via the Vercel Shareable Link) should be able to:
+A reviewer (or Jeremy, testing cold, via the public Vercel URL) should be able to:
 1. Open the deployed site on a phone with no instructions.
 2. Type a dream and watch the entry → constellation transition.
 3. Select lenses (try all 3, then narrow to 2, then to 1) and see the synthesis correctly adapt each time.

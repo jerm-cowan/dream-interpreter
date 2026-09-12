@@ -18,7 +18,7 @@ Most dream interpretation tools hand you a single confident-sounding explanation
 
 ## MVP scope
 
-**In scope:** guided multi-step journey (entry → constellation → reveal → synthesis), tone control with real regeneration, 1/2/3-lens filtering with adaptive synthesis, animated reveal/connecting-line transitions, copy-to-clipboard, graceful rate-limit handling, responsive layout (triangular on tablet/desktop, stacked on mobile).
+**In scope:** guided multi-step journey (entry → constellation → reveal → synthesis), tone control with real regeneration, 1/2/3-lens filtering with adaptive synthesis, animated reveal/connecting-line transitions, copy-to-clipboard, graceful rate-limit handling, responsive layout (same triangular arrangement scaling fluidly at every breakpoint, condensing rather than stacking on mobile).
 
 **Out of scope (by design):** user accounts, saved dream journals/history, follow-up AI chat, RAG, vector databases, long-term memory, social sharing, AI image generation. See [`BRIEF.md`](./BRIEF.md) for full rationale.
 
@@ -30,7 +30,7 @@ Most dream interpretation tools hand you a single confident-sounding explanation
 - **Google Gemini** (free tier, personal API key) — every generation is a live call; no canned/sample interpretations. Key lives only in a server-side Vercel environment variable.
 - One or two lightweight serverless functions: one for the initial 3-lens generation, one for recomputing synthesis when lens selection changes.
 - No database — nothing is persisted between sessions.
-- **Deployed on Vercel**, gated by **Vercel Authentication** with a Shareable Link (no manually distributed password).
+- **Deployed on Vercel** at a plain, intentionally public URL — no Vercel Authentication, no login, no manually distributed password.
 
 > **Note on framework choice:** Protogen 200 teaches Vue. This project deliberately uses React instead — a documented decision — to prioritize a richer animated experience. See `BRIEF.md` Section 8.
 

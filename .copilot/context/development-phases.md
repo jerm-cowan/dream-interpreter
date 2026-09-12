@@ -61,9 +61,9 @@ Aim for **multiple commits per phase**, not one commit per phase.
 - Test on an actual phone and at tablet/desktop widths — confirm the triangular-to-stacked reflow works smoothly, not just structurally.
 - Confirm animations perform well on mobile, not just desktop.
 
-## Phase 11 — Deployment & Access Control
+## Phase 11 — Deployment & Access Control ✅ (done — revised scope)
 - Deploy to Vercel (Hobby/free plan).
-- Enable Vercel Authentication and generate a Shareable Link for the deployment.
+- **Revised from the original plan:** rather than Vercel Authentication + Shareable Link, the deployment uses a plain, intentionally public Vercel URL (`dream-interpreter-blue.vercel.app`) — zero-friction access for reviewers, with no cost exposure since the Gemini key has no billing account attached. See BRIEF.md Section 8.
 - Confirm the Gemini API key is set as a Vercel environment variable (not in the repo).
 
 ## Phase 12 — Final Review Against BRIEF.md
