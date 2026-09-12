@@ -251,7 +251,7 @@ function ResultsScreen({
               onClick={() => setSynthesisExpanded((value) => !value)}
               aria-expanded={synthesisExpanded}
               aria-label={synthesisExpanded ? 'Collapse synthesis' : 'Expand synthesis'}
-              className="p-1 -m-1 shrink-0 text-gem-citrine-900"
+              className="p-3 -m-3 shrink-0 text-gem-citrine-900"
             >
               {synthesisExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
             </button>
@@ -286,7 +286,7 @@ function ResultsScreen({
         <button
           type="button"
           onClick={onStartOver}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gem-obsidian-500 hover:text-gem-obsidian-700 transition-colors"
+          className="inline-flex items-center gap-1.5 p-3 -m-3 text-sm font-medium text-gem-obsidian-500 hover:text-gem-obsidian-700 transition-colors"
         >
           <RotateCcw className="w-4 h-4" />
           Start Over

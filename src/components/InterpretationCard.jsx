@@ -41,7 +41,7 @@ function InterpretationCard({ lensId, lens, body, selected, onToggle, expanded =
           onClick={onToggleExpand}
           aria-expanded={expanded}
           aria-label={expanded ? `Collapse ${lens}` : `Expand ${lens}`}
-          className="p-1 -m-1 shrink-0"
+          className="p-3 -m-3 shrink-0"
         >
           {expanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
         </button>

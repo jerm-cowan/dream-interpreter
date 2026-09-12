@@ -6,7 +6,7 @@ function BackButton({ label = 'Back' }) {
     <button
       type="button"
       onClick={() => window.history.back()}
-      className="absolute top-4 left-4 md:top-6 md:left-6 inline-flex items-center gap-1.5 text-sm font-medium text-gem-obsidian-400 hover:text-gem-obsidian-600 transition-colors"
+      className="absolute top-4 left-4 md:top-6 md:left-6 inline-flex items-center gap-1.5 p-3 -m-3 text-sm font-medium text-gem-obsidian-400 hover:text-gem-obsidian-600 transition-colors"
     >
       <ArrowLeft className="w-4 h-4" />
       {label}

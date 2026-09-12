@@ -80,7 +80,7 @@ function CopyResultsButton({ tone, selectedLenses, generatedLenses, synthesis })
       type="button"
       onClick={handleCopy}
       disabled={disabled}
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-gem-obsidian-500 hover:text-gem-obsidian-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="inline-flex items-center gap-1.5 p-3 -m-3 text-sm font-medium text-gem-obsidian-500 hover:text-gem-obsidian-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
       {copied ? 'Copied!' : 'Copy Results'}
