@@ -52,7 +52,7 @@ Each lens color ships as a full scale (50/100/200/300/500/600/700/900) so select
 ## Typography
 
 - **Implemented:** [Work Sans](https://fonts.google.com/specimen/Work+Sans) (humanist sans-serif) for all UI chrome and body copy, loaded via Google Fonts and set as the `font-sans` Tailwind theme default.
-- **Implemented:** [Fraunces](https://fonts.google.com/specimen/Fraunces) (expressive display serif) as `font-display`, applied to the app name ("Dream Reflection"), the per-screen page titles ("Choose your lenses", "Your Reflection"), and each lens's heading/label — not used for general body copy.
+- **Implemented:** [Fraunces](https://fonts.google.com/specimen/Fraunces) (expressive display serif) as `font-display`, applied to the app name ("Dream Reflection"), the per-screen page titles ("Choose your lenses", "Dream Analysis"), and each lens's heading/label — not used for general body copy.
 - Body text sized generously for mobile reading (minimum ~16px equivalent).
 - General body/heading text color uses the Obsidian neutral scale (`gem-obsidian-*`) — this is distinct from the Reflective tone state, which is now identified by Garnet (see palette above).
 

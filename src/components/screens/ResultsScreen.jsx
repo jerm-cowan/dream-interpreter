@@ -143,7 +143,7 @@ function ResultsScreen({
           <Brain className="w-6 h-6 text-gem-opal-700" strokeWidth={1.5} />
         </div>
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
-          Your Reflection
+          Dream Analysis
         </h2>
         <ToneControl value={tone} onChange={onToneChange} disabled={isGenerating} />
         {isGenerating ? (
