@@ -11,7 +11,7 @@ function EntryScreen({ dreamText, onDreamTextChange, onSubmit, loadingState = 'i
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="min-h-dvh flex items-center justify-center px-6 py-12">
       <form onSubmit={handleSubmit} className="w-full max-w-xl flex flex-col gap-8">
         <header className="flex flex-col items-center gap-2 text-center">
           <div className="w-12 h-12 flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm">

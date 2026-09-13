@@ -77,6 +77,60 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
+  // Every navigation (forward via navigateTo, or back via popstate) bumps viewKey — always land at
+  // the top of the new screen rather than carrying over whatever scroll position the previous
+  // screen was left at. Each screen is a fresh DOM node per viewKey (so scrollTop should already be
+  // 0), but the entering/exiting screens briefly overlap during the AnimatePresence crossfade, and
+  // browser scroll-anchoring can still carry over an offset — so scrollTop is force-reset directly
+  // on the entering container (via ref) one frame after paint, in addition to the window itself.
+  const screenRefs = {
+    entry: useRef(null),
+    constellation: useRef(null),
+    results: useRef(null),
+  }
+
+  useEffect(() => {
+    function resetScroll() {
+      const activeRef = screenRefs[view]?.current
+      if (activeRef) activeRef.scrollTop = 0
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+    const rafId = requestAnimationFrame(resetScroll)
+    // Longest entrance transition (Constellation) is ~750ms — a second correction after it settles
+    // guards against any late scroll-anchoring nudge during the crossfade itself.
+    const timeoutId = setTimeout(resetScroll, 800)
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearTimeout(timeoutId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewKey, view])
+
+  // iOS keyboard dismissal fires a visualViewport resize (the viewport grows back) but never
+  // restores whatever scroll offset the browser applied to keep the focused field visible above
+  // the keyboard — that leftover offset otherwise persists into every screen visited afterward.
+  // Only correct it once nothing is actively being typed into, so we don't fight the browser's own
+  // scroll-into-view while the keyboard is still open.
+  useEffect(() => {
+    const viewport = window.visualViewport
+    if (!viewport) return
+
+    function handleViewportResize() {
+      const activeEl = document.activeElement
+      const isTyping = activeEl && (activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'INPUT')
+      if (isTyping) return
+      const activeRef = screenRefs[view]?.current
+      if (activeRef) activeRef.scrollTop = 0
+      window.scrollTo(0, 0)
+    }
+
+    viewport.addEventListener('resize', handleViewportResize)
+    return () => viewport.removeEventListener('resize', handleViewportResize)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view])
+
   function navigateTo(nextView) {
     setView(nextView)
     setViewKey((key) => key + 1)
@@ -231,10 +285,15 @@ function App() {
   }
 
   return (
-    <main className="relative min-h-screen bg-gem-opal-50 font-sans text-gem-obsidian-700">
+    <main className="relative min-h-dvh bg-gem-opal-50 font-sans text-gem-obsidian-700">
       <AnimatePresence>
         {view === 'entry' && (
-          <motion.div key={`entry-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.entry}>
+          <motion.div
+            key={`entry-${viewKey}`}
+            ref={screenRefs.entry}
+            className="absolute inset-0 overflow-y-auto"
+            {...SCREEN_MOTION.entry}
+          >
             <EntryScreen
               dreamText={dreamText}
               onDreamTextChange={setDreamText}
@@ -245,7 +304,12 @@ function App() {
         )}
 
         {view === 'constellation' && (
-          <motion.div key={`constellation-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.constellation}>
+          <motion.div
+            key={`constellation-${viewKey}`}
+            ref={screenRefs.constellation}
+            className="absolute inset-0 overflow-y-auto"
+            {...SCREEN_MOTION.constellation}
+          >
             <ConstellationScreen
               tone={tone}
               onToneChange={handleToneChange}
@@ -259,7 +323,12 @@ function App() {
         )}
 
         {view === 'results' && (
-          <motion.div key={`results-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.results}>
+          <motion.div
+            key={`results-${viewKey}`}
+            ref={screenRefs.results}
+            className="absolute inset-0 overflow-y-auto"
+            {...SCREEN_MOTION.results}
+          >
             <ResultsScreen
               dreamText={dreamText}
               tone={tone}

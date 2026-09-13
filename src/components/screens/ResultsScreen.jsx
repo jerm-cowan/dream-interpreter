@@ -137,7 +137,7 @@ function ResultsScreen({
   const { duration: lineDuration, stagger: lineStagger } = fast ? REVEAL_LINE_TIMING.fast : REVEAL_LINE_TIMING.slow
 
   return (
-    <div className="relative min-h-screen flex flex-col gap-8 px-4 py-8">
+    <div className="relative min-h-dvh flex flex-col gap-8 px-4 py-8">
       <BackButton />
       <header className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
         <CenterIcon variant="results" className="relative w-12 h-12" iconClassName="w-6 h-6" />

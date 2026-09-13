@@ -29,7 +29,7 @@ function ConstellationScreen({
   const isBusy = isGenerating || isSynthesizing
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center gap-12 px-6 py-12">
+    <div className="relative min-h-dvh flex flex-col items-center gap-12 px-6 py-12">
       <BackButton />
       <header className="w-full max-w-xl flex flex-col items-center gap-5">
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
