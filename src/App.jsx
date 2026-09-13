@@ -261,6 +261,7 @@ function App() {
         {view === 'results' && (
           <motion.div key={`results-${viewKey}`} className="absolute inset-0 overflow-y-auto" {...SCREEN_MOTION.results}>
             <ResultsScreen
+              dreamText={dreamText}
               tone={tone}
               onToneChange={handleToneChange}
               selectedLenses={selectedLenses}

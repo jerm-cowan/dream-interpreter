@@ -5,8 +5,12 @@ import { LENSES } from '../lensData'
 // Builds the plain-text export of the CURRENT view: whichever lenses are selected (full body text,
 // regardless of that card's collapsed/expanded state on-screen — collapsed only affects reading,
 // never what's included here) plus the synthesis shape matching the current selection count.
-export function buildResultsText({ tone, selectedLenses, generatedLenses, synthesis }) {
+export function buildResultsText({ dreamText, tone, selectedLenses, generatedLenses, synthesis }) {
   const lines = [`Dream Reflection — ${tone === 'playful' ? 'Playful' : 'Reflective'} tone`, '']
+
+  if (dreamText) {
+    lines.push('Your Dream', dreamText, '')
+  }
 
   LENSES.forEach((lens) => {
     if (!selectedLenses.includes(lens.id)) return
@@ -58,7 +62,7 @@ async function copyToClipboard(text) {
   return success
 }
 
-function CopyResultsButton({ tone, selectedLenses, generatedLenses, synthesis }) {
+function CopyResultsButton({ dreamText, tone, selectedLenses, generatedLenses, synthesis }) {
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef(null)
   const disabled = selectedLenses.length === 0 || !generatedLenses
@@ -67,7 +71,7 @@ function CopyResultsButton({ tone, selectedLenses, generatedLenses, synthesis })
 
   async function handleCopy() {
     if (disabled) return
-    const text = buildResultsText({ tone, selectedLenses, generatedLenses, synthesis })
+    const text = buildResultsText({ dreamText, tone, selectedLenses, generatedLenses, synthesis })
     const success = await copyToClipboard(text)
     if (!success) return
     setCopied(true)

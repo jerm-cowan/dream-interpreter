@@ -10,6 +10,7 @@ import { LENS_STROKE, REVEAL_LINE_TIMING } from '../ConnectingLines'
 import { LENSES } from '../../lensData'
 
 function ResultsScreen({
+  dreamText,
   tone,
   onToneChange,
   selectedLenses,
@@ -160,6 +161,12 @@ function ResultsScreen({
         )}
       </header>
 
+      {dreamText && (
+        <blockquote className="w-full max-w-2xl mx-auto pl-4 border-l-2 border-gem-opal-300 text-lg italic text-gem-obsidian-500">
+          {dreamText}
+        </blockquote>
+      )}
+
       {/* Below lg, gap here matches the lens cards' own gap-6 so every accordion (3 lens cards +
           synthesis) sits at the same vertical spacing; lg+ uses the wider row layout's own gap-14 */}
       <div ref={gridRef} className="relative w-full max-w-5xl mx-auto flex flex-col gap-6 lg:gap-14">
@@ -281,7 +288,13 @@ function ResultsScreen({
       </div>
 
       <div className="flex items-center justify-center gap-4 pb-4">
-        <CopyResultsButton tone={tone} selectedLenses={selectedLenses} generatedLenses={generatedLenses} synthesis={synthesis} />
+        <CopyResultsButton
+          dreamText={dreamText}
+          tone={tone}
+          selectedLenses={selectedLenses}
+          generatedLenses={generatedLenses}
+          synthesis={synthesis}
+        />
         <span className="h-4 w-px bg-gem-opal-300" aria-hidden="true" />
         <button
           type="button"
