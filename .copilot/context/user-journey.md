@@ -1,4 +1,4 @@
-# User Journey — Dream Reflection
+# User Journey — Dream Exploration
 
 A guided, multi-step journey built as in-app view states (no router/page reloads) — Motion's `AnimatePresence` handles every transition between steps.
 

@@ -1,8 +1,8 @@
-# Dream Reflection
+# Dream Exploration
 
 A mobile-first React web experience that guides you through exploring what a memorable dream might mean — across three different lenses, which you can filter and slice, instead of one flat answer.
 
-> Dream Reflection does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
+> Dream Exploration does not attempt to diagnose or determine the "correct" meaning of a dream. It's a tool for exploring possible interpretations across different schools of thought and deciding which perspectives resonate with you.
 
 ## What it does
 
@@ -14,7 +14,7 @@ A mobile-first React web experience that guides you through exploring what a mem
 
 ## Why this exists
 
-Most dream interpretation tools hand you a single confident-sounding explanation. Dream Reflection instead lets you compare frameworks, slice them by what resonates, and adjust the tone — closer to an interactive data story about your own dream than a static fortune-telling app.
+Most dream interpretation tools hand you a single confident-sounding explanation. Dream Exploration instead lets you compare frameworks, slice them by what resonates, and adjust the tone — closer to an interactive data story about your own dream than a static fortune-telling app.
 
 ## MVP scope
 

@@ -18,7 +18,7 @@ function EntryScreen({ dreamText, onDreamTextChange, onSubmit, loadingState = 'i
             <Brain className="w-6 h-6 text-gem-opal-700" strokeWidth={1.5} aria-hidden="true" />
           </div>
           <h1 className="font-display text-3xl md:text-4xl font-semibold text-gem-obsidian-900 tracking-tight">
-            Dream Reflection
+            Dream Exploration
           </h1>
           <p className="text-gem-obsidian-500/80 text-base md:text-lg">Describe a dream you have had</p>
         </header>

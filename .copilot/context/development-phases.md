@@ -1,4 +1,4 @@
-# Development Phases — Dream Reflection (Protogen Case Study Build Plan)
+# Development Phases — Dream Exploration (Protogen Case Study Build Plan)
 
 This plan satisfies all three Protogen case study review areas — the build works end-to-end, the repo/AI scaffolding is in place with real commit history, and the design reflects planning captured in `BRIEF.md`.
 

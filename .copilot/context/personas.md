@@ -1,4 +1,4 @@
-# User Personas — Dream Reflection
+# User Personas — Dream Exploration
 
 Two personas, representing the two most common motivations for opening this app. Both should be able to move through the full entry → constellation → reveal → synthesis journey, filtering lenses and adjusting tone as they like.
 
@@ -23,7 +23,7 @@ Two personas, representing the two most common motivations for opening this app.
 
 **Age/context:** 34, software engineer, enjoys pop psychology and folklore but doesn't believe dreams "mean" anything literal.
 
-**Scenario:** Theo's partner mentioned a bizarre dream at breakfast (being chased by a talking vending machine) and joked "what do you think that means?" Theo pulls out Dream Reflection half as a joke, half genuinely curious.
+**Scenario:** Theo's partner mentioned a bizarre dream at breakfast (being chased by a talking vending machine) and joked "what do you think that means?" Theo pulls out Dream Exploration half as a joke, half genuinely curious.
 
 **Goals:**
 - Compare lenses for fun and conversation.

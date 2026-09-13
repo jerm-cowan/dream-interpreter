@@ -1,4 +1,4 @@
-# Information Architecture — Dream Reflection
+# Information Architecture — Dream Exploration
 
 This is a **single-page app with multiple in-app view states** (no router, no page reloads) — Motion's `AnimatePresence` handles transitions between states. The "architecture" here is about which states exist, what's visible in each, and how state (tone, lens selection) persists across transitions.
 

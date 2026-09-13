@@ -1,4 +1,4 @@
-# AI Generation Approach — Dream Reflection
+# AI Generation Approach — Dream Exploration
 
 This doc answers, precisely, how generation works end to end: which LLM, how grounding works without RAG, how lens-filtered synthesis is computed without wasteful re-generation, and how rate-limit failures are handled gracefully.
 

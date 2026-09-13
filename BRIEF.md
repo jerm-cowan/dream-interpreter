@@ -1,8 +1,8 @@
-# Project Brief: Dream Reflection
+# Project Brief: Dream Exploration
 
 ## 1. Summary
 
-**Dream Reflection** is a mobile-first web experience that helps someone explore what a memorable dream might mean — not by giving them one "correct" answer, but by guiding them through a short, delightful journey through three different lenses (psychology, neuroscience, and symbolism/culture), letting them slice the synthesis by whichever lens(es) resonate, and reflecting rather than concluding.
+**Dream Exploration** is a mobile-first web experience that helps someone explore what a memorable dream might mean — not by giving them one "correct" answer, but by guiding them through a short, delightful journey through three different lenses (psychology, neuroscience, and symbolism/culture), letting them slice the synthesis by whichever lens(es) resonate, and reflecting rather than concluding.
 
 This is a **Protogen P303 (Mobile Experience) case study**. The scenario is self-defined (wellness/self-reflection) rather than pulled from the standard industry table, which the case study instructions explicitly allow.
 
@@ -20,7 +20,7 @@ They are most likely opening this on their phone — right after waking up, on a
 
 ## 3. Core Value Proposition
 
-Most dream interpretation tools give a single, confident-sounding explanation. **Dream Reflection instead turns interpretation into an explorable, filterable experience** — the user can compare all three lenses, or narrow in on just the one or two that resonate, and watch the synthesis recompute around their selection. The comparison — and the ability to slice it — is the product.
+Most dream interpretation tools give a single, confident-sounding explanation. **Dream Exploration instead turns interpretation into an explorable, filterable experience** — the user can compare all three lenses, or narrow in on just the one or two that resonate, and watch the synthesis recompute around their selection. The comparison — and the ability to slice it — is the product.
 
 ## 4. Core Workflow (a multi-step journey, not a single form)
 

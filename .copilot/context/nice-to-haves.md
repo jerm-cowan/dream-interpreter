@@ -1,4 +1,4 @@
-# Nice-to-Have Features — Dream Reflection
+# Nice-to-Have Features — Dream Exploration
 
 These are explicitly **not** part of MVP. If you build any of these, update `BRIEF.md`'s scope section to reflect the change.
 

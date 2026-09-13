@@ -1,4 +1,4 @@
-# Suggested Repo Structure & AI Scaffolding — Dream Reflection
+# Suggested Repo Structure & AI Scaffolding — Dream Exploration
 
 ```
 dream-reflection/

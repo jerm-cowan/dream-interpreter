@@ -1,4 +1,4 @@
-# MVP Features — Dream Reflection
+# MVP Features — Dream Exploration
 
 These are the features required for the build to satisfy the Protogen case study rubric and the vision in `BRIEF.md`. Nothing here is optional for v1.
 

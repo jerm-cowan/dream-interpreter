@@ -6,7 +6,7 @@ import { LENSES } from '../lensData'
 // regardless of that card's collapsed/expanded state on-screen — collapsed only affects reading,
 // never what's included here) plus the synthesis shape matching the current selection count.
 export function buildResultsText({ dreamText, tone, selectedLenses, generatedLenses, synthesis }) {
-  const lines = [`Dream Reflection — ${tone === 'playful' ? 'Playful' : 'Reflective'} tone`, '']
+  const lines = [`Dream Exploration — ${tone === 'playful' ? 'Playful' : 'Reflective'} tone`, '']
 
   if (dreamText) {
     lines.push('Your Dream', dreamText, '')

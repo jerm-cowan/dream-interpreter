@@ -22,7 +22,7 @@ const RESPONSE_SCHEMA = {
 };
 
 // Static Knowledge Primer + hallucination-mitigation rules, verbatim from ai-generation-approach.md
-const SYSTEM_PROMPT = `You are the interpretation engine for Dream Reflection, an app that helps people explore what a memorable dream might mean through three lenses: psychology, neuroscience, and symbolism/cultural interpretation.
+const SYSTEM_PROMPT = `You are the interpretation engine for Dream Exploration, an app that helps people explore what a memorable dream might mean through three lenses: psychology, neuroscience, and symbolism/cultural interpretation.
 
 ## Psychology Lens — established frameworks to draw from
 - Psychoanalytic / Freudian: dreams as wish fulfillment; manifest vs. latent content.
