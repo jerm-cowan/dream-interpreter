@@ -140,7 +140,7 @@ function ResultsScreen({
     <div className="relative min-h-screen flex flex-col gap-8 px-4 py-8">
       <BackButton />
       <header className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
-        <CenterIcon variant="results" className="w-12 h-12" iconClassName="w-6 h-6" />
+        <CenterIcon variant="results" className="relative w-12 h-12" iconClassName="w-6 h-6" />
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
           Dream Analysis
         </h2>

@@ -18,7 +18,7 @@ function CenterIcon({ variant = 'constellation', className = '', iconClassName =
   const isResults = variant === 'results'
   return (
     <div
-      className={`relative flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm overflow-hidden ${className}`}
+      className={`flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm overflow-hidden ${className}`}
       style={style}
     >
       <div aria-hidden="true" className={`center-icon-swirl ${VARIANT_CLASSES[variant]}`} />
