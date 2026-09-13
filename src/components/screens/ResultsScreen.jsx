@@ -1,11 +1,12 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { RotateCcw, Brain, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
+import { RotateCcw, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
 import { motion } from 'motion/react'
 import ToneControl from '../ToneControl'
 import InterpretationCard from '../InterpretationCard'
 import SynthesisSection from '../SynthesisSection'
 import CopyResultsButton from '../CopyResultsButton'
 import BackButton from '../BackButton'
+import CenterIcon from '../CenterIcon'
 import { LENS_STROKE, REVEAL_LINE_TIMING } from '../ConnectingLines'
 import { LENSES } from '../../lensData'
 
@@ -139,9 +140,7 @@ function ResultsScreen({
     <div className="relative min-h-screen flex flex-col gap-8 px-4 py-8">
       <BackButton />
       <header className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
-        <div className="w-12 h-12 flex items-center justify-center rounded-full border border-gem-opal-300 bg-gradient-to-br from-gem-opal-50 to-gem-opal-200 shadow-sm">
-          <Brain className="w-6 h-6 text-gem-opal-700" strokeWidth={1.5} />
-        </div>
+        <CenterIcon variant="results" className="w-12 h-12" iconClassName="w-6 h-6" />
         <h2 className="font-display text-3xl md:text-4xl font-semibold text-center text-gem-obsidian-900 tracking-tight">
           Dream Analysis
         </h2>

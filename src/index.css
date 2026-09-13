@@ -136,3 +136,59 @@ p {
   background: var(--color-gem-opal-300);
 }
 
+/* Swirling gemstone-color overlay behind the center "dreaming mind" icon — a rotating conic
+   gradient of the three lens colors, sized well past the circle's bounds so its edges never
+   show through the rounded-full mask as it turns. Sits behind the icon glyph (z-10), so the
+   icon's shape/legibility is unaffected no matter where the colors land in the cycle. */
+.center-icon-swirl {
+  position: absolute;
+  inset: -60%;
+  border-radius: 9999px;
+  /* Only the 3 lens colors swirl here — citrine is reserved for the Results icon's fill/glow */
+  background: conic-gradient(
+    from 0deg,
+    var(--color-gem-amethyst-300),
+    var(--color-gem-sapphire-300),
+    var(--color-gem-emerald-300),
+    var(--color-gem-amethyst-300)
+  );
+  filter: blur(6px);
+  animation: center-icon-swirl-spin linear infinite;
+  will-change: transform;
+}
+
+/* Constellation: gentle ambient shimmer — low opacity, slow rotation, doesn't compete for attention */
+.center-icon-swirl--ambient {
+  opacity: 0.28;
+  animation-duration: 13s;
+}
+
+/* Results: slightly more pronounced/lively — a bit more saturated and quicker, still restrained */
+.center-icon-swirl--lively {
+  opacity: 0.42;
+  animation-duration: 7s;
+}
+
+@keyframes center-icon-swirl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion: keep a faint static tint instead of removing the effect outright */
+@media (prefers-reduced-motion: reduce) {
+  .center-icon-swirl {
+    animation: none;
+    transform: rotate(0deg);
+  }
+  .center-icon-swirl--ambient {
+    opacity: 0.18;
+  }
+  .center-icon-swirl--lively {
+    opacity: 0.24;
+  }
+}
+
